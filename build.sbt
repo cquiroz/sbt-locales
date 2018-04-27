@@ -1,7 +1,7 @@
 import sbt._
 import sbt.io.Using
 
-val scalaVer = "2.12.5"
+val scalaVer = "2.12.4"
 
 lazy val commonSettings = Seq(
   name         := "sbt-locales",
@@ -36,10 +36,18 @@ lazy val sbt_locales = project
   .settings(
     name := "sbt-locales",
     sbtPlugin := true,
+    scriptedLaunchOpts := { scriptedLaunchOpts.value ++
+      Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+    },
+    scriptedBufferLog := false,
     libraryDependencies ++= Seq(
-      "org.apache.commons"   %  "commons-compress" % "1.16.1",
       "com.eed3si9n"         %% "gigahorse-okhttp" % "0.3.1",
-      "com.github.pathikrit" %% "better-files"     % "3.4.0"
+      "org.scala-lang.modules" %% "scala-xml" % "1.1.0",
+      "com.github.pathikrit" %% "better-files"     % "3.4.0",
+      "org.typelevel"        %% "cats-core"            % "1.1.0",
+      "org.typelevel"        %% "cats-effect"          % "0.10.1",
+      "com.eed3si9n"         %% "treehugger"           % "0.4.3",
+      "org.scalatest"        %% "scalatest"            % "3.0.4" % "test"
     ),
     addSbtPlugin("org.scala-js"      % "sbt-scalajs"  % "0.6.22")
   )
