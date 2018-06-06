@@ -8,20 +8,16 @@ import Keys._
 import cats._
 import cats.implicits._
 import cats.effect
-import org.scalajs.sbtplugin
 
 object LocalesPlugin extends AutoPlugin {
   sealed trait CLDRVersion {
     val id: String
-    val path: String
   }
   case object LatestVersion extends CLDRVersion {
     val id: String   = "latest"
-    val path: String = "tzdata-latest"
   }
   final case class Version(version: String) extends CLDRVersion {
     val id: String   = version
-    val path: String = s"releases/tzdata$version"
   }
 
   object autoImport {
@@ -36,7 +32,6 @@ object LocalesPlugin extends AutoPlugin {
   }
 
   import autoImport._
-  override def requires = sbtplugin.ScalaJSPlugin
   override def trigger  = noTrigger
   override lazy val buildSettings = Seq(
     localesFilter := { case _ => true },
@@ -70,18 +65,18 @@ object LocalesPlugin extends AutoPlugin {
     // val jt =
     //   IOTasks.copyProvider(sourceManaged, "TzdbZoneRulesProvider.scala", "java.time.zone", true)
     // val providerCopy = if (includeTTBP) List(ttbp, jt) else List(jt)
-    val r = (for {
+    (for {
       _ <- IOTasks.downloadCLDR(log, resourcesManaged, dbVersion)
       // Use it to detect if files have been already generated
-      // p <- IOTasks.providerFile(sourceManaged, "TzdbZoneRulesProvider.scala", "java.time.zone")
+      m <- IOTasks.copyProvider(sourceManaged, "model.scala", "locales/cldr")
+      c <- IOTasks.copyProvider(sourceManaged, "cldr.scala", "locales/cldr")
       // e <- effect.IO(p.exists)
       // j <- if (e) effect.IO(List(p)) else providerCopy.sequence
       // f <- if (e) IOTasks.tzDataSources(sourceManaged, includeTTBP).map(_.map(_._3))
-      _ <- IOTasks.generateCLDR(sourceManaged, resourcesManaged)
+      f <- IOTasks.generateCLDR(sourceManaged, resourcesManaged / "locales")
 
       //     else
       //       IOTasks.generateTZDataSources(sourceManaged, tzdbData, log, includeTTBP, zonesFilter)
-    } yield ()).unsafeRunSync
-    Seq.empty
+    } yield Seq(m, c) ++ f).unsafeRunSync
   }
 }

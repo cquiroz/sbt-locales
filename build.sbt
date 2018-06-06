@@ -1,12 +1,12 @@
 import sbt._
 import sbt.io.Using
 
-val scalaVer = "2.12.4"
+val scalaVer = "2.12.6"
 
 lazy val commonSettings = Seq(
   name         := "sbt-locales",
   description  := "Sbt plugin to build custom locale databases",
-  version      := "0.1.0-SNAPSHOT",
+  version      := "0.0.1",
   organization := "io.github.cquiroz",
   homepage     := Some(url("https://github.com/cquiroz/sbt-locales")),
   licenses     := Seq("BSD 3-Clause License" -> url("https://opensource.org/licenses/BSD-3-Clause")),
@@ -28,7 +28,7 @@ lazy val commonSettings = Seq(
   },
   pomExtra := pomData,
   pomIncludeRepository := { _ => false },
-) ++ scalafixSettings
+)
 
 lazy val sbt_locales = project
   .in(file("."))
@@ -48,8 +48,7 @@ lazy val sbt_locales = project
       "org.typelevel"        %% "cats-effect"          % "0.10.1",
       "com.eed3si9n"         %% "treehugger"           % "0.4.3",
       "org.scalatest"        %% "scalatest"            % "3.0.4" % "test"
-    ),
-    addSbtPlugin("org.scala-js"      % "sbt-scalajs"  % "0.6.22")
+    )
   )
 
 lazy val pomData =

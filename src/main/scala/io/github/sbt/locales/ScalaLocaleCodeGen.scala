@@ -8,6 +8,10 @@ import javax.xml.parsers.SAXParserFactory
 import scala.collection.JavaConverters._
 import scala.collection.breakOut
 import scala.xml.{XML, _}
+import locales.cldr.data.model._
+import locales.cldr.Calendar
+import locales.cldr.NumberPatterns
+import locales.cldr.NumberingSystem
 
 object ScalaLocaleCodeGen {
   def writeGeneratedTree(base: File, file: String, tree: treehugger.forest.Tree):File = {
@@ -90,9 +94,9 @@ object ScalaLocaleCodeGen {
     }).headOption
 
     if (List(months, weekdays, amPm, eras).exists(_.isDefined)) {
-      Some(CalendarSymbols(months.getOrElse(MonthSymbols.zero),
-        weekdays.getOrElse(WeekdaysSymbols.zero), amPm.getOrElse(AmPmSymbols.zero),
-        eras.getOrElse(EraSymbols.zero)))
+      Some(CalendarSymbols(months.getOrElse(MonthSymbols.Zero),
+        weekdays.getOrElse(WeekdaysSymbols.Zero), amPm.getOrElse(AmPmSymbols.Zero),
+        eras.getOrElse(EraSymbols.Zero)))
     } else {
       None
     }
@@ -189,8 +193,8 @@ object ScalaLocaleCodeGen {
   /**
    * Parse the xml into an XMLLDML object
    */
-  def constructLDMLDescriptor(f: File, xml: Elem, latn: NumericSystem,
-                              ns: Map[String, NumericSystem]): XMLLDML = {
+  def constructLDMLDescriptor(f: File, xml: Elem, latn: NumberingSystem,
+                              ns: Map[String, NumberingSystem]): XMLLDML = {
     // Parse locale components
     val language = (xml \ "identity" \ "language" \ "@type").text
     val territory = Option((xml \ "identity" \ "territory" \ "@type").text)
@@ -321,7 +325,7 @@ object ScalaLocaleCodeGen {
     f.newSAXParser()
   }
 
-  def parseNumberingSystems(xml: Elem): Seq[NumericSystem] = {
+  def parseNumberingSystems(xml: Elem): Seq[NumberingSystem] = {
     val ns = xml \ "numberingSystems" \\ "numberingSystem"
 
     for {
@@ -330,18 +334,18 @@ object ScalaLocaleCodeGen {
     } yield {
       val id = (n \ "@id").text
       val digits = (n \ "@digits").text
-      NumericSystem(id, digits)
+      NumberingSystem(id, digits)
     }
   }
 
-  def readNumericSystems(data: File): Seq[NumericSystem] = {
+  def readNumberingSystems(data: File): Seq[NumberingSystem] = {
     // Parse the numeric systems
     val numberingSystemsFile = data.toPath.resolve("common")
       .resolve("supplemental").resolve("numberingSystems.xml").toFile
     parseNumberingSystems(XML.withSAXParser(parser).loadFile(numberingSystemsFile))
   }
 
-  def generateNumericSystemsFile(base: File, numericSystems: Seq[NumericSystem]): File = {
+  def generateNumberingSystemsFile(base: File, numericSystems: Seq[NumberingSystem]): File = {
     // Generate numeric systems source code
     writeGeneratedTree(base, "numericsystems",
       CodeGenerator.numericSystems(numericSystems))
@@ -404,8 +408,8 @@ object ScalaLocaleCodeGen {
       CodeGenerator.calendars(calendars))
   }
 
-  def buildLDMLDescriptors(data: File, numericSystemsMap: Map[String, NumericSystem],
-                           latnNS: NumericSystem): List[XMLLDML] = {
+  def buildLDMLDescriptors(data: File, numericSystemsMap: Map[String, NumberingSystem],
+                           latnNS: NumberingSystem): List[XMLLDML] = {
     // All files under common/main
     val files = Files.newDirectoryStream(data.toPath.resolve("common")
       .resolve("main")).iterator().asScala.toList
@@ -445,14 +449,14 @@ object ScalaLocaleCodeGen {
   def generateDataSourceCode(base: File, data: File): Seq[File] = {
     val nanos = System.nanoTime()
     println("Generate")
-    val numericSystems = readNumericSystems(data)
-    val f1 = generateNumericSystemsFile(base, numericSystems)
+    val numericSystems = readNumberingSystems(data)
+    val f1 = generateNumberingSystemsFile(base, numericSystems)
 
     val calendars = readCalendars(data)
     val parentLocales = readParentLocales(data)
     val f2 = generateCalendarsFile(base, calendars)
 
-    val numericSystemsMap: Map[String, NumericSystem] =
+    val numericSystemsMap: Map[String, NumberingSystem] =
       numericSystems.map(n => n.id -> n)(breakOut)
     // latn NS must exist, break if not found
     val latnNS = numericSystemsMap("latn")

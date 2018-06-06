@@ -30,7 +30,7 @@ object IOTasks {
         _ <- IO(log.info(s"to file $coreZip"))
         _ <- IO(mkdirs(localesDir))
         _ <- IO(SbtIO.unzipURL(new URL(url), localesDir.toJava))
-        _ <- IO(log.info("CLDR files expanded"))
+        _ <- IO(log.info(s"CLDR files expanded on $localesDir"))
       } yield ()
     } else {
       IO(log.debug("cldr files already available"))
@@ -40,12 +40,22 @@ object IOTasks {
   def generateCLDR(base: JFile, data: JFile): IO[Seq[JFile]] =
     IO(ScalaLocaleCodeGen.generateDataSourceCode(base, data))
 
-  def providerFile(base: JFile, name: String, packageDir: String): IO[File] = IO {
+  def providerFile(base: JFile, name: String): IO[File] = IO {
     val pathSeparator   = JFile.separator
-    val packagePath     = packageDir.replaceAll("\\.", pathSeparator)
-    val destinationPath = base.toScala / packagePath
-    val destinationFile = destinationPath / name
-    destinationFile
+    val destinationPath = base.toScala
+    destinationPath / name
   }
 
+  def copyProvider(base: JFile, name: String, packageDir: String): IO[JFile] = IO {
+    val pathSeparator       = JFile.separator
+    val packagePath         = packageDir.replaceAll("\\.", pathSeparator)
+    val stream: InputStream = getClass.getResourceAsStream("/" + name)
+    val destinationPath     = base.toScala / packagePath
+    mkdirs(destinationPath)
+    val destinationFile = destinationPath / name
+    rm(destinationFile)
+    println(s"Copy to $destinationFile")
+    SbtIO.transfer(stream, destinationFile.toJava)
+    destinationFile.toJava
+  }
 }

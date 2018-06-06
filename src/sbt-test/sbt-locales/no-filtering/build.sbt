@@ -1,5 +1,5 @@
-name := "browserless"
+name := "no-filtering"
 
-enablePlugins(SbtLocalesPlugin)
+enablePlugins(LocalesPlugin)
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.6"
