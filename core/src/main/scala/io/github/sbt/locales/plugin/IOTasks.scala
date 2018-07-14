@@ -37,8 +37,8 @@ object IOTasks {
     }
   }
 
-  def generateCLDR(base: JFile, data: JFile): IO[Seq[JFile]] =
-    IO(ScalaLocaleCodeGen.generateDataSourceCode(base, data))
+  def generateCLDR(base: JFile, data: JFile, filter: String => Boolean): IO[Seq[JFile]] =
+    IO(ScalaLocaleCodeGen.generateDataSourceCode(base, data, filter))
 
   def providerFile(base: JFile, name: String): IO[File] = IO {
     val pathSeparator   = JFile.separator

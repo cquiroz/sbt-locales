@@ -409,13 +409,14 @@ object ScalaLocaleCodeGen {
   }
 
   def buildLDMLDescriptors(data: File, numericSystemsMap: Map[String, NumberingSystem],
-                           latnNS: NumberingSystem): List[XMLLDML] = {
+                           latnNS: NumberingSystem, filter: String => Boolean): List[XMLLDML] = {
     // All files under common/main
     val files = Files.newDirectoryStream(data.toPath.resolve("common")
       .resolve("main")).iterator().asScala.toList
 
     for {
       f <- files.map(k => k.toFile)
+      if (filter(f.getName.replaceAll("\\.xml$", "")) || f.getName == "en.xml"|| f.getName == "root.xml")
       //if f.getName == "en.xml" || f.getName == "root.xml"
       r = new InputStreamReader(new FileInputStream(f), "UTF-8")
     } yield constructLDMLDescriptor(f, XML.withSAXParser(parser).load(r),
@@ -446,7 +447,7 @@ object ScalaLocaleCodeGen {
       CodeGenerator.currencyData(currencyData))
   }
 
-  def generateDataSourceCode(base: File, data: File): Seq[File] = {
+  def generateDataSourceCode(base: File, data: File, filter: String => Boolean): Seq[File] = {
     val nanos = System.nanoTime()
     println("Generate")
     val numericSystems = readNumberingSystems(data)
@@ -461,7 +462,7 @@ object ScalaLocaleCodeGen {
     // latn NS must exist, break if not found
     val latnNS = numericSystemsMap("latn")
 
-    val ldmls = buildLDMLDescriptors(data, numericSystemsMap, latnNS)
+    val ldmls = buildLDMLDescriptors(data, numericSystemsMap, latnNS, filter)
 
     val f3 = generateMetadataFile(base, ldmls)
     val f4 = generateLocalesFile(base, ldmls, parentLocales)

@@ -42,21 +42,35 @@ object LocalesPlugin extends AutoPlugin {
       sourceGenerators in Compile += Def.task {
         localesCodeGen.value
       },
-      localesCodeGen :=
-        localesCodeGenImpl(
-          sourceManaged = (sourceManaged in Compile).value,
-          resourcesManaged = (resourceManaged in Compile).value,
-          localesFilter = localesFilter.value,
-          dbVersion = dbVersion.value,
-          log = streams.value.log
-        )
+      localesCodeGen := Def.task {
+        val cacheLocation = streams.value.cacheDirectory / s"cldr-locales"
+        val log = streams.value.log
+        val resourcesManaged = (resourceManaged in Compile).value
+        val coreZip    = resourcesManaged / "core.zip"
+        val cachedActionFunction: Set[JFile] => Set[JFile] =
+          FileFunction.cached(
+            cacheLocation,
+            inStyle = FilesInfo.hash
+          ) { _ =>
+            log.info(
+              s"Building cldr library")
+            localesCodeGenImpl(
+              sourceManaged = (sourceManaged in Compile).value,
+              resourcesManaged = (resourceManaged in Compile).value,
+              localesFilter = localesFilter.value,
+              dbVersion = dbVersion.value,
+              log = log
+            )
+          }
+        cachedActionFunction.apply(Set(coreZip)).toSeq
+      }.value
     )
 
   def localesCodeGenImpl(sourceManaged: JFile,
                       resourcesManaged: JFile,
                       localesFilter: String => Boolean,
                       dbVersion: CLDRVersion,
-                      log: Logger): Seq[JFile] = {
+                      log: Logger): Set[JFile] = {
     // val tzdbData: JFile = resourcesManaged / "tzdb"
     // val ttbp = IOTasks.copyProvider(sourceManaged,
     //                                 "TzdbZoneRulesProvider.scala",
@@ -73,10 +87,10 @@ object LocalesPlugin extends AutoPlugin {
       // e <- effect.IO(p.exists)
       // j <- if (e) effect.IO(List(p)) else providerCopy.sequence
       // f <- if (e) IOTasks.tzDataSources(sourceManaged, includeTTBP).map(_.map(_._3))
-      f <- IOTasks.generateCLDR(sourceManaged, resourcesManaged / "locales")
+      f <- IOTasks.generateCLDR(sourceManaged, resourcesManaged / "locales", localesFilter)
 
       //     else
       //       IOTasks.generateTZDataSources(sourceManaged, tzdbData, log, includeTTBP, zonesFilter)
-    } yield Seq(m, c) ++ f).unsafeRunSync
+    } yield Seq(m, c) ++ f).unsafeRunSync.toSet
   }
 }
