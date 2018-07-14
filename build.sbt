@@ -30,8 +30,15 @@ lazy val commonSettings = Seq(
   pomIncludeRepository := { _ => false },
 )
 
+lazy val api = project
+  .in(file("api"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "cldr-api"
+  )
+
 lazy val sbt_locales = project
-  .in(file("."))
+  .in(file("sbt-locales"))
   .settings(commonSettings: _*)
   .settings(
     name := "sbt-locales",
