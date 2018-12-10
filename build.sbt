@@ -6,7 +6,7 @@ val scalaVer = "2.12.6"
 lazy val commonSettings = Seq(
   name         := "sbt-locales",
   description  := "Sbt plugin to build custom locale databases",
-  version      := "0.0.1",
+  // version      := "0.0.1",
   organization := "io.github.cquiroz",
   homepage     := Some(url("https://github.com/cquiroz/sbt-locales")),
   licenses     := Seq("BSD 3-Clause License" -> url("https://opensource.org/licenses/BSD-3-Clause")),
@@ -48,13 +48,13 @@ lazy val sbt_locales = project
     },
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
-      "com.eed3si9n"         %% "gigahorse-okhttp" % "0.3.1",
-      "org.scala-lang.modules" %% "scala-xml" % "1.1.0",
-      "com.github.pathikrit" %% "better-files"     % "3.4.0",
-      "org.typelevel"        %% "cats-core"            % "1.1.0",
-      "org.typelevel"        %% "cats-effect"          % "0.10.1",
-      "com.eed3si9n"         %% "treehugger"           % "0.4.3",
-      "org.scalatest"        %% "scalatest"            % "3.0.4" % "test"
+      "com.eed3si9n"           %% "gigahorse-okhttp"     % "0.3.1",
+      "org.scala-lang.modules" %% "scala-xml"            % "1.1.0",
+      "com.github.pathikrit"   %% "better-files"         % "3.4.0",
+      "org.typelevel"          %% "cats-core"            % "1.1.0",
+      "org.typelevel"          %% "cats-effect"          % "0.10.1",
+      "com.eed3si9n"           %% "treehugger"           % "0.4.3",
+      "org.scalatest"          %% "scalatest"            % "3.0.4" % "test"
     )
   )
 

@@ -2,6 +2,8 @@ package locales.cldr
 
 import java.util.Locale
 
+final case class CLDRMetadata(isoCountries: Array[String], isoLanguages: Array[String], scripts: Array[String])
+
 /** Interfaces describing calendar data */
 case class Calendar(id: String)
 case class CalendarSymbols(months: List[String], shortMonths: List[String],

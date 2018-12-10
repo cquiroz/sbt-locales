@@ -447,6 +447,11 @@ object ScalaLocaleCodeGen {
       CodeGenerator.currencyData(currencyData))
   }
 
+  def generateLocalesProvider(base: File): File = {
+    writeGeneratedTree(base, "provider",
+      CodeGenerator.localesProvider())
+  }
+
   def generateDataSourceCode(base: File, data: File, filter: String => Boolean): Seq[File] = {
     val nanos = System.nanoTime()
     println("Generate")
@@ -469,6 +474,7 @@ object ScalaLocaleCodeGen {
 
     val currencyData = readCurrencyData(data)
     val f5 = generateCurrencyDataFile(base, currencyData)
+    val f6 = generateLocalesProvider(base)
 
     println("Generation took " + (System.nanoTime() - nanos) / 1000000 + " [ms]")
     Seq(f1, f2, f3, f4, f5)
