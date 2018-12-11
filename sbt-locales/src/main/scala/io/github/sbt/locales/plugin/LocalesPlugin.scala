@@ -79,11 +79,12 @@ object LocalesPlugin extends AutoPlugin {
     // val jt =
     //   IOTasks.copyProvider(sourceManaged, "TzdbZoneRulesProvider.scala", "java.time.zone", true)
     // val providerCopy = if (includeTTBP) List(ttbp, jt) else List(jt)
+    println("HERE")
     (for {
       _ <- IOTasks.downloadCLDR(log, resourcesManaged, dbVersion)
       // Use it to detect if files have been already generated
-      m <- IOTasks.copyProvider(sourceManaged, "model.scala", "locales/cldr")
-      c <- IOTasks.copyProvider(sourceManaged, "cldr.scala", "locales/cldr")
+      m <- IOTasks.copyProvider(log, sourceManaged, "model.scala", "locales/cldr")
+      c <- IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")
       // e <- effect.IO(p.exists)
       // j <- if (e) effect.IO(List(p)) else providerCopy.sequence
       // f <- if (e) IOTasks.tzDataSources(sourceManaged, includeTTBP).map(_.map(_._3))

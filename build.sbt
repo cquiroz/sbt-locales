@@ -1,7 +1,7 @@
 import sbt._
 import sbt.io.Using
 
-val scalaVer = "2.12.6"
+val scalaVer = "2.12.8"
 
 lazy val commonSettings = Seq(
   name         := "sbt-locales",
@@ -39,25 +39,25 @@ lazy val api = project
 
 lazy val sbt_locales = project
   .in(file("sbt-locales"))
+  .enablePlugins(SbtPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "sbt-locales",
-    sbtPlugin := true,
     scriptedLaunchOpts := { scriptedLaunchOpts.value ++
       Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
     },
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
       "com.eed3si9n"           %% "gigahorse-okhttp"     % "0.3.1",
-      "org.scala-lang.modules" %% "scala-xml"            % "1.1.0",
-      "com.github.pathikrit"   %% "better-files"         % "3.4.0",
-      "org.typelevel"          %% "cats-core"            % "1.1.0",
-      "org.typelevel"          %% "cats-effect"          % "0.10.1",
-      "com.eed3si9n"           %% "treehugger"           % "0.4.3",
-      "org.scalatest"          %% "scalatest"            % "3.0.4" % "test"
+      "org.scala-lang.modules" %% "scala-xml"            % "1.1.1",
+      "com.github.pathikrit"   %% "better-files"         % "3.7.0",
+      "org.typelevel"          %% "cats-core"            % "1.5.0",
+      "org.typelevel"          %% "cats-effect"          % "1.1.0",
+      "com.eed3si9n"           %% "treehugger"           % "0.4.3"
     )
   )
-
+  .dependsOn(api)
+  
 lazy val pomData =
   <scm>
     <url>git@github.com:cquiroz/sbt-locales.git</url>

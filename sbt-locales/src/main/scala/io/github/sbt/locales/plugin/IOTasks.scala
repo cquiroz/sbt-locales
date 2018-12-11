@@ -20,8 +20,10 @@ object IOTasks {
     val localesDir = resourcesDir.toScala / "locales"
     val coreZip    = resourcesDir.toScala / "core.zip"
     if (!localesDir.exists) {
+      // var url =
+      //   s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"
       var url =
-        s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"
+        s"file:///Users/cquiroz/core.zip"
       for {
         _ <- IO(
               log.info(
@@ -46,7 +48,7 @@ object IOTasks {
     destinationPath / name
   }
 
-  def copyProvider(base: JFile, name: String, packageDir: String): IO[JFile] = IO {
+  def copyProvider(log: Logger, base: JFile, name: String, packageDir: String): IO[JFile] = IO {
     val pathSeparator       = JFile.separator
     val packagePath         = packageDir.replaceAll("\\.", pathSeparator)
     val stream: InputStream = getClass.getResourceAsStream("/" + name)
@@ -54,7 +56,7 @@ object IOTasks {
     mkdirs(destinationPath)
     val destinationFile = destinationPath / name
     rm(destinationFile)
-    println(s"Copy to $destinationFile")
+    log.info(s"Copy $name to $destinationFile")
     SbtIO.transfer(stream, destinationFile.toJava)
     destinationFile.toJava
   }

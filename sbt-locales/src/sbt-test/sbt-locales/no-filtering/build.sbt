@@ -2,4 +2,4 @@ name := "no-filtering"
 
 enablePlugins(LocalesPlugin)
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"

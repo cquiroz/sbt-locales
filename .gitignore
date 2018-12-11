@@ -20,5 +20,6 @@
 /.idea
 *.iml
 .metals
+.bloop
 /project/project/
 /project/target/
