@@ -15,4 +15,4 @@ jobs:
       - name: Checking your code format
         run: csbt scalafmtCheckAll
       - name: Run tests
-        run: csbt test scripted
+        run: csbt +apiJVM/publishLocal scripted
