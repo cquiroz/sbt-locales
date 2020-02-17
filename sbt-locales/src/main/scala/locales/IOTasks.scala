@@ -1,4 +1,4 @@
-package io.github.cquiroz.sbt.locales.plugin
+package locales
 
 import better.files._
 import better.files.Dsl._
@@ -11,12 +11,13 @@ import cats.implicits._
 import cats.effect.IO
 import sbt.Logger
 import sbt.io.{IO => SbtIO}
-import io.github.cquiroz.sbt.locales._
 
 object IOTasks {
-  def downloadCLDR(log: Logger,
-                   resourcesDir: JFile,
-                   cldrVersion: LocalesPlugin.CLDRVersion): IO[Unit] = {
+  def downloadCLDR(
+      log: Logger,
+      resourcesDir: JFile,
+      cldrVersion: LocalesPlugin.CLDRVersion
+  ): IO[Unit] = {
     val localesDir = resourcesDir.toScala / "locales"
     val coreZip    = resourcesDir.toScala / "core.zip"
     if (!localesDir.exists) {
@@ -26,8 +27,9 @@ object IOTasks {
         s"file:///Users/cquiroz/core.zip"
       for {
         _ <- IO(
-              log.info(
-                s"CLDR data missing. downloading ${cldrVersion.id} version to $localesDir..."))
+              log
+                .info(s"CLDR data missing. downloading ${cldrVersion.id} version to $localesDir...")
+            )
         _ <- IO(log.info(s"downloading from $url"))
         _ <- IO(log.info(s"to file $coreZip"))
         _ <- IO(mkdirs(localesDir))
@@ -39,8 +41,19 @@ object IOTasks {
     }
   }
 
-  def generateCLDR(base: JFile, data: JFile, filter: String => Boolean): IO[Seq[JFile]] =
-    IO(ScalaLocaleCodeGen.generateDataSourceCode(base, data, filter))
+  def generateCLDR(
+      base: JFile,
+      data: JFile,
+      filters: Filters
+  ): IO[Seq[JFile]] =
+    IO(
+      ScalaLocaleCodeGen
+        .generateDataSourceCode(
+          base,
+          data,
+          filters
+        )
+    )
 
   def providerFile(base: JFile, name: String): IO[File] = IO {
     val pathSeparator   = JFile.separator

@@ -1,64 +1,42 @@
-package locales.cldr.data.model
-
-import locales.cldr.Calendar
-import locales.cldr.NumberPatterns
-import locales.cldr.NumberingSystem
-
-trait ScalaSafeName[T] {
-  def scalaSafeName(t: T): String
-}
-
-object ScalaSafeName {
-  def apply[A](implicit ev: ScalaSafeName[A]): ScalaSafeName[A] = ev
-
-  implicit val CalendarSafeName: ScalaSafeName[Calendar] = new ScalaSafeName[Calendar] {
-    override def scalaSafeName(c: Calendar): String = c.id.replace("-", "_")
-  }
-
-  implicit class ScalaSafeNameOps[T: ScalaSafeName](s: T) {
-    def scalaSafeName: String = ScalaSafeName[T].scalaSafeName(s)
-  }
-}
+package locales.cldr
 
 /**
   * Calendar value objects built from calendar CLDR XML data
   */
-final case class MonthSymbols(months: Seq[String], shortMonths: Seq[String])
+final case class MonthSymbols(months: List[String], shortMonths: List[String])
 object MonthSymbols {
-  val Zero = MonthSymbols(Seq.empty, Seq.empty)
+  val Zero = MonthSymbols(List.empty, List.empty)
 }
 
-final case class WeekdaysSymbols(weekdays: Seq[String], shortWeekdays: Seq[String])
+final case class WeekdaysSymbols(weekdays: List[String], shortWeekdays: List[String])
 object WeekdaysSymbols {
-  val Zero = WeekdaysSymbols(Seq.empty, Seq.empty)
+  val Zero = WeekdaysSymbols(List.empty, List.empty)
 }
 
-final case class AmPmSymbols(amPm: Seq[String])
+final case class AmPmSymbols(amPm: List[String])
 object AmPmSymbols {
-  val Zero = AmPmSymbols(Seq.empty)
+  val Zero = AmPmSymbols(List.empty)
 }
 
-final case class EraSymbols(eras: Seq[String])
+final case class EraSymbols(eras: List[String])
 object EraSymbols {
-  val Zero = EraSymbols(Seq.empty)
+  val Zero = EraSymbols(List.empty)
 }
 
-final case class CalendarSymbols(months: MonthSymbols, weekdays: WeekdaysSymbols,
-    amPm: AmPmSymbols, eras: EraSymbols)
-
-final case class DateTimePattern(patternType: String, pattern: String)
-
-final case class CalendarPatterns(datePatterns: List[DateTimePattern], timePatterns: List[DateTimePattern])
+final case class CalendarPatterns(
+    datePatterns: Map[Int, String],
+    timePatterns: Map[Int, String]
+)
 
 object CalendarPatterns {
-  val Zero = CalendarPatterns(Nil, Nil)
+  val Zero = CalendarPatterns(Map.empty, Map.empty)
 }
 
 /**
   * Calendar value objects built from calendar CLDR XML data
   */
-
-final case class NumberSymbols(system: NumberingSystem,
+final case class NumberSymbols(
+    system: NumberingSystem,
     aliasOf: Option[NumberingSystem] = None,
     decimal: Option[Char] = None,
     group: Option[Char] = None,
@@ -69,7 +47,8 @@ final case class NumberSymbols(system: NumberingSystem,
     perMille: Option[Char] = None,
     infinity: Option[String] = None,
     nan: Option[String] = None,
-    exp: Option[String] = None)
+    exp: Option[String] = None
+)
 
 object NumberSymbols {
   def alias(system: NumberingSystem, aliasOf: NumberingSystem): NumberSymbols =
@@ -80,40 +59,66 @@ object NumberSymbols {
 final case class CurrencyDisplayName(name: String, count: Option[String])
 final case class CurrencySymbol(symbol: String, alt: Option[String])
 
-final case class NumberCurrency(currencyCode: String,
+final case class NumberCurrency(
+    currencyCode: String,
     symbols: Seq[CurrencySymbol],
-    displayNames: Seq[CurrencyDisplayName])
+    displayNames: Seq[CurrencyDisplayName]
+)
 
 // CurrencyData in supplemental/supplementalData.xml that defines currency availability by region
 //    and digits/formatting, augment with Numeric Code Mappings & Master Currency Code List
-final case class CurrencyData(currencyTypes: Seq[CurrencyType],
+final case class CurrencyData(
+    currencyTypes: Seq[CurrencyType],
     fractions: Seq[CurrencyDataFractionsInfo],
     regions: Seq[CurrencyDataRegion],
-    numericCodes: Seq[CurrencyNumericCode])
+    numericCodes: Seq[CurrencyNumericCode]
+)
 
 final case class CurrencyType(currencyCode: String, currencyName: String)
 
 final case class CurrencyNumericCode(currencyCode: String, numericCode: Int)
 
-final case class CurrencyDataFractionsInfo(currencyCode: String, digits: Int, rounding: Int,
-    cashDigits: Option[Int], cashRounding: Option[Int])
+// currency code "DEFAULT" is used if currency code doesn't exist
+final case class CurrencyDataFractionsInfo(
+    currencyCode: String,
+    digits: Int,
+    rounding: Int,
+    cashDigits: Option[Int],
+    cashRounding: Option[Int]
+)
 
-final case class CurrencyDataRegion(countryCode: String, currencies: Seq[CurrencyDataRegionCurrency])
+final case class CurrencyDataRegion(
+    countryCode: String,
+    currencies: Seq[CurrencyDataRegionCurrency]
+)
 
-final case class CurrencyDataRegionCurrency(currencyCode: String,
-    from: Option[String], to: Option[String], tender: Option[Boolean])
+final case class CurrencyDataRegionCurrency(
+    currencyCode: String,
+    from: Option[String],
+    to: Option[String],
+    tender: Option[Boolean]
+)
 
-final case class XMLLDMLLocale(language: String, territory: Option[String],
-    variant: Option[String], script: Option[String])
+final case class XMLLDMLLocale(
+    language: String,
+    territory: Option[String],
+    variant: Option[String],
+    script: Option[String]
+)
 
-final case class XMLLDML(locale: XMLLDMLLocale, fileName: String, defaultNS: Option[NumberingSystem],
-    digitSymbols: Map[NumberingSystem, NumberSymbols], calendar: Option[CalendarSymbols],
-    datePatterns: Option[CalendarPatterns],
+final case class XMLLDML(
+    locale: XMLLDMLLocale,
+    fileName: String,
+    defaultNS: Option[NumberingSystem],
+    digitSymbols: Map[NumberingSystem, NumberSymbols],
+    calendar: Option[CalendarSymbols],
+    calendarPatterns: Option[CalendarPatterns],
     currencies: Seq[NumberCurrency],
-    numberPatterns: NumberPatterns) {
+    numberPatterns: NumberPatterns
+) {
 
   val scalaSafeName: String = {
-    List(Some(locale.language), locale.script, locale.territory, locale.variant)
-      .flatten.mkString("_")
+    List(Some(locale.language), locale.script, locale.territory, locale.variant).flatten
+      .mkString("_")
   }
 }

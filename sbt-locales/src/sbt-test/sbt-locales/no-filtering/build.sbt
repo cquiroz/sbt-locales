@@ -1,5 +1,14 @@
-name := "no-filtering"
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
+import locales._
 
-enablePlugins(LocalesPlugin)
-
-scalaVersion := "2.12.8"
+lazy val root =
+  crossProject(JSPlatform, JVMPlatform) //, NativePlatform)
+    .enablePlugins(LocalesPlugin)
+    .in(file("."))
+    .settings(
+      name := "no-filtering",
+      scalaVersion := "2.12.10",
+      nsFilter := NumberingSystemFilter.Selection("latn"),
+      currencyFilter := CurrencyFilter.Selection("EUR"),
+      libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
+    )
