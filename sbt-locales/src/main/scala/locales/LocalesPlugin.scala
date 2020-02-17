@@ -1,6 +1,6 @@
 package locales
 
-import java.io.{File => JFile}
+import java.io.{ File => JFile }
 import better.files._
 import sbt._
 import sbt.util.Logger
@@ -63,11 +63,11 @@ object LocalesPlugin extends AutoPlugin {
                   supportNumberFormats.value
                 )
                 localesCodeGenImpl(
-                  sourceManaged = (sourceManaged in Compile).value,
+                  sourceManaged    = (sourceManaged in Compile).value,
                   resourcesManaged = (resourceManaged in Compile).value,
                   filters,
                   dbVersion = dbVersion.value,
-                  log = log
+                  log       = log
                 )
             }
           cachedActionFunction.apply(Set(coreZip)).toSeq
@@ -96,11 +96,11 @@ object LocalesPlugin extends AutoPlugin {
     inConfig(Compile)(baseLocalesSettings)
 
   def localesCodeGenImpl(
-      sourceManaged: JFile,
-      resourcesManaged: JFile,
-      filters: Filters,
-      dbVersion: CLDRVersion,
-      log: Logger
+    sourceManaged:    JFile,
+    resourcesManaged: JFile,
+    filters:          Filters,
+    dbVersion:        CLDRVersion,
+    log:              Logger
   ): Set[JFile] =
     (for {
       _ <- IOTasks.downloadCLDR(log, resourcesManaged, dbVersion)
@@ -110,9 +110,9 @@ object LocalesPlugin extends AutoPlugin {
       p <- IOTasks.copyProvider(log, sourceManaged, "provider.scala", "locales/cldr")
       l <- IOTasks.copyProvider(log, sourceManaged, "ldmlprovider.scala", "locales/cldr")
       f <- IOTasks.generateCLDR(
-            sourceManaged,
-            resourcesManaged / "locales",
-            filters
-          )
+        sourceManaged,
+        resourcesManaged / "locales",
+        filters
+      )
     } yield Seq(m, c, p, l) ++ f).unsafeRunSync.toSet
 }

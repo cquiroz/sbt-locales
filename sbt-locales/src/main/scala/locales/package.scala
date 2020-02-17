@@ -112,11 +112,11 @@ object CurrencyRegionFilter {
 
 }
 final case class Filters(
-    localesFilter: LocalesFilter,
-    nsFilter: NumberingSystemFilter,
-    calendarFilter: CalendarFilter,
-    currencyFilter: CurrencyFilter,
-    currencyRegionFilter: CurrencyRegionFilter,
-    supportDateTimeFormats: Boolean,
-    supportNumberFormats: Boolean
+  localesFilter:          LocalesFilter,
+  nsFilter:               NumberingSystemFilter,
+  calendarFilter:         CalendarFilter,
+  currencyFilter:         CurrencyFilter,
+  currencyRegionFilter:   CurrencyRegionFilter,
+  supportDateTimeFormats: Boolean,
+  supportNumberFormats:   Boolean
 )

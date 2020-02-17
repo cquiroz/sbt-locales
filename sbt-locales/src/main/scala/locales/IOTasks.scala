@@ -2,21 +2,21 @@ package locales
 
 import better.files._
 import better.files.Dsl._
-import java.io.{BufferedInputStream, BufferedOutputStream, InputStream}
-import java.io.{FileOutputStream, FileInputStream, File => JFile}
-import java.nio.file.{Files, StandardCopyOption}
+import java.io.{ BufferedInputStream, BufferedOutputStream, InputStream }
+import java.io.{ FileOutputStream, FileInputStream, File => JFile }
+import java.nio.file.{ Files, StandardCopyOption }
 import java.net.URL
 import cats._
 import cats.implicits._
 import cats.effect.IO
 import sbt.Logger
-import sbt.io.{IO => SbtIO}
+import sbt.io.{ IO => SbtIO }
 
 object IOTasks {
   def downloadCLDR(
-      log: Logger,
-      resourcesDir: JFile,
-      cldrVersion: LocalesPlugin.CLDRVersion
+    log:          Logger,
+    resourcesDir: JFile,
+    cldrVersion:  LocalesPlugin.CLDRVersion
   ): IO[Unit] = {
     val localesDir = resourcesDir.toScala / "locales"
     val coreZip    = resourcesDir.toScala / "core.zip"
@@ -27,9 +27,9 @@ object IOTasks {
         s"file:///Users/cquiroz/core.zip"
       for {
         _ <- IO(
-              log
-                .info(s"CLDR data missing. downloading ${cldrVersion.id} version to $localesDir...")
-            )
+          log
+            .info(s"CLDR data missing. downloading ${cldrVersion.id} version to $localesDir...")
+        )
         _ <- IO(log.info(s"downloading from $url"))
         _ <- IO(log.info(s"to file $coreZip"))
         _ <- IO(mkdirs(localesDir))
@@ -42,9 +42,9 @@ object IOTasks {
   }
 
   def generateCLDR(
-      base: JFile,
-      data: JFile,
-      filters: Filters
+    base:    JFile,
+    data:    JFile,
+    filters: Filters
   ): IO[Seq[JFile]] =
     IO(
       ScalaLocaleCodeGen

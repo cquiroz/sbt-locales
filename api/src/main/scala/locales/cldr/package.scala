@@ -7,4 +7,3 @@ package object cldr {
     datePatternsFormatIdx.map(_.swap)
 
 }
-

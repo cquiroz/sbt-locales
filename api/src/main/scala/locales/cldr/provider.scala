@@ -4,7 +4,6 @@ trait LocalesProvider {
   def root: LDML
   def ldmls: Map[String, LDML]
   def metadata: CLDRMetadata
-  def latn: NumberingSystem      
+  def latn: NumberingSystem
   def currencyData: CurrencyData
 }
-

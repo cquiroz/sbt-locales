@@ -2,14 +2,14 @@ package locales
 
 import cats._
 import cats.implicits._
-import java.io.{File, FileInputStream, InputStreamReader}
+import java.io.{ File, FileInputStream, InputStreamReader }
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.util.function.IntPredicate
 import javax.xml.parsers.SAXParserFactory
 import scala.collection.JavaConverters._
 import scala.collection.breakOut
-import scala.xml.{XML, _}
+import scala.xml.{ XML, _ }
 import locales.cldr._
 
 object ScalaLocaleCodeGen {
@@ -114,18 +114,18 @@ object ScalaLocaleCodeGen {
   def readCalendarPatterns(xml: Node): Option[CalendarPatterns] = {
     val formatIndex: Map[String, Int] =
       Map(
-        "full"   -> 0,
-        "long"   -> 1,
+        "full" -> 0,
+        "long" -> 1,
         "medium" -> 2,
-        "short"  -> 3
+        "short" -> 3
         // val DEFAULT: Int = 2
       )
     def readPatterns(n: Node, sub: String, formatType: String): List[(Int, String)] =
       for {
         ft <- (n \ formatType).toList
         p  <- ft \ sub \ "pattern"
-        v  = { println(p \ "@alt"); (p \ "@alt").text }
-        t  = (ft \ "@type").text
+        v = { println(p \ "@alt"); (p \ "@alt").text }
+        t = (ft \ "@type").text
         if v != "variant"
       } yield formatIndex.getOrElse(t, sys.error(s"Uknown format $t")) -> p.text
 
@@ -194,28 +194,26 @@ object ScalaLocaleCodeGen {
       val tender       = toOptionBoolean(currency \ "@tender")
 
       countryCode -> CurrencyDataRegionCurrency(currencyCode, from, to, tender)
-    }).groupBy { _._1 }
+    }).groupBy(_._1)
       .map {
         case (countryCode: String, currencies: List[(String, CurrencyDataRegionCurrency)]) =>
-          CurrencyDataRegion(countryCode, currencies.map { _._2 })
+          CurrencyDataRegion(countryCode, currencies.map(_._2))
         case _ => ???
       }
       .toSeq
 
     CurrencyData(
       currencyTypes = currencyTypes,
-      fractions = fractions,
-      regions = regions,
-      numericCodes = numericCodes
+      fractions     = fractions,
+      regions       = regions,
+      numericCodes  = numericCodes
     )
   }
 
   def parseCurrencyTypes(xml: Node): List[CurrencyType] =
     for {
-      keys <- (xml \ "keyword" \ """key""").toList
-      currencyKeys <- keys.filter { n =>
-                       (n \ "@name").text == "cu"
-                     }
+      keys         <- (xml \ "keyword" \ """key""").toList
+      currencyKeys <- keys.filter(n => (n \ "@name").text == "cu")
       currencyType <- currencyKeys \\ "type"
     } yield {
       CurrencyType((currencyType \ "@name").text.toUpperCase, (currencyType \ "@description").text)
@@ -225,11 +223,11 @@ object ScalaLocaleCodeGen {
     * Parse the xml into an XMLLDML object
     */
   def constructLDMLDescriptor(
-      f: File,
-      xml: Elem,
-      latn: NumberingSystem,
-      ns: Map[String, NumberingSystem],
-      filters: Filters
+    f:       File,
+    xml:     Elem,
+    latn:    NumberingSystem,
+    ns:      Map[String, NumberingSystem],
+    filters: Filters
   ): XMLLDML = {
     // Parse locale components
     val language = (xml \ "identity" \ "language" \ "@type").text
@@ -296,7 +294,7 @@ object ScalaLocaleCodeGen {
       }
       .sorted
       .headOption
-      .map { _._2 }
+      .map(_._2)
 
     // Find out the default numeric system
     val defaultNS = Option((xml \ "numbers" \ "defaultNumberingSystem").text)
@@ -425,9 +423,9 @@ object ScalaLocaleCodeGen {
   }
 
   def generateNumberingSystemsFile(
-      base: File,
-      numericSystems: List[NumberingSystem],
-      nsFilter: String => Boolean
+    base:           File,
+    numericSystems: List[NumberingSystem],
+    nsFilter:       String => Boolean
   ): File =
     // Generate numeric systems source code
     writeGeneratedTree(
@@ -503,18 +501,18 @@ object ScalaLocaleCodeGen {
   }
 
   def generateCalendarsFile(
-      base: File,
-      calendars: List[Calendar],
-      filter: String => Boolean
+    base:      File,
+    calendars: List[Calendar],
+    filter:    String => Boolean
   ): File =
     // Generate numeric systems source code
     writeGeneratedTree(base, "calendars", CodeGenerator.calendars(calendars, filter))
 
   def buildLDMLDescriptors(
-      data: File,
-      numericSystemsMap: Map[String, NumberingSystem],
-      latnNS: NumberingSystem,
-      filters: Filters
+    data:              File,
+    numericSystemsMap: Map[String, NumberingSystem],
+    latnNS:            NumberingSystem,
+    filters:           Filters
   ): List[XMLLDML] = {
     // All files under common/main
     val files = Files
@@ -542,10 +540,10 @@ object ScalaLocaleCodeGen {
   }
 
   def generateLocalesFile(
-      base: File,
-      clazzes: List[XMLLDML],
-      parentLocales: Map[String, List[String]],
-      nsFilter: String => Boolean
+    base:          File,
+    clazzes:       List[XMLLDML],
+    parentLocales: Map[String, List[String]],
+    nsFilter:      String => Boolean
   ): File = {
     val names = clazzes.map(_.scalaSafeName)
 
@@ -581,9 +579,9 @@ object ScalaLocaleCodeGen {
     writeGeneratedTree(base, "provider", CodeGenerator.localesProvider())
 
   def generateDataSourceCode(
-      base: File,
-      data: File,
-      filters: Filters
+    base:    File,
+    data:    File,
+    filters: Filters
   ): List[File] = {
     val nanos          = System.nanoTime()
     val numericSystems = readNumberingSystems(data)
