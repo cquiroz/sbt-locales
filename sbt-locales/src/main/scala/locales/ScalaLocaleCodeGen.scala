@@ -374,7 +374,7 @@ object ScalaLocaleCodeGen {
     val fileName = f.getName.substring(0, f.getName.lastIndexOf("."))
 
     XMLLDML(
-      XMLLDMLLocale(language, territory, variant, script),
+      LDMLLocale(language, territory, variant, script),
       fileName,
       defaultNS.flatMap(ns.get),
       symbols.toMap.filter(_ => filters.supportNumberFormats),

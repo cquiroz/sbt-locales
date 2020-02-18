@@ -8,46 +8,6 @@ final case class CLDRMetadata(
   scripts:      Array[String]
 )
 
-/** Interfaces describing calendar data */
-case class Calendar(id: String) {
-  def safeName: String = id.replace("-", "_")
-}
-
-case class CalendarSymbols(
-  months:        List[String],
-  shortMonths:   List[String],
-  weekdays:      List[String],
-  shortWeekdays: List[String],
-  amPm:          List[String],
-  eras:          List[String]
-)
-
-/**
-  * Interfaces describing the digit symbols
-  */
-case class NumberingSystem(id: String, digits: Seq[Char])
-
-/** Number Formatting Patterns */
-case class NumberPatterns(
-  decimalFormat:  Option[String],
-  percentFormat:  Option[String],
-  currencyFormat: Option[String]
-)
-
-case class Symbols(
-  ns:       NumberingSystem,
-  aliasOf:  Option[NumberingSystem],
-  decimal:  Option[Char],
-  group:    Option[Char],
-  list:     Option[Char],
-  percent:  Option[Char],
-  minus:    Option[Char],
-  perMille: Option[Char],
-  infinity: Option[String],
-  nan:      Option[String],
-  exp:      Option[String]
-)
-
 /**
   * Interfaces describing an LDML Locale
   */
@@ -110,4 +70,21 @@ case class LDML(
         .setVariant(locale.variant.getOrElse(""))
         .build
     }
+}
+
+final case class XMLLDML(
+  locale:           LDMLLocale,
+  fileName:         String,
+  defaultNS:        Option[NumberingSystem],
+  digitSymbols:     Map[NumberingSystem, NumberSymbols],
+  calendar:         Option[CalendarSymbols],
+  calendarPatterns: Option[CalendarPatterns],
+  currencies:       Seq[NumberCurrency],
+  numberPatterns:   NumberPatterns
+) {
+
+  val scalaSafeName: String = {
+    List(Some(locale.language), locale.script, locale.territory, locale.variant).flatten
+      .mkString("_")
+  }
 }
