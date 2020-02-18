@@ -45,4 +45,3 @@ case class CalendarSymbols(
   amPm:          List[String],
   eras:          List[String]
 )
-

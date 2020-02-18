@@ -43,4 +43,3 @@ final case class CurrencyDataRegionCurrency(
   to:           Option[String],
   tender:       Option[Boolean]
 )
-

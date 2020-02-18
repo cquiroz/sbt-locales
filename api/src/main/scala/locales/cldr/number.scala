@@ -48,4 +48,3 @@ object NumberSymbols {
   def alias(system: NumberingSystem, aliasOf: NumberingSystem): NumberSymbols =
     NumberSymbols(system, aliasOf = Some(aliasOf))
 }
-
