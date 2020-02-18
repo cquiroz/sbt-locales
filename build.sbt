@@ -6,11 +6,11 @@ val scalaVer = "2.12.10"
 
 inThisBuild(
   List(
-    organization := "io.github",
+    organization := "io.github.cquiroz",
     homepage := Some(url("https://github.com/cquiroz/sbt-locales")),
     licenses := Seq("BSD 3-Clause License" -> url("https://opensource.org/licenses/BSD-3-Clause")),
-    developers := List(
-      Developer("cquiroz",
+      developers := List(
+        Developer("cquiroz",
                 "Carlos Quiroz",
                 "carlos.m.quiroz@gmail.com",
                 url("https://github.com/cquiroz"))
@@ -28,9 +28,6 @@ lazy val commonSettings = Seq(
   name := "sbt-locales",
   description := "Sbt plugin to build custom locale databases",
   // version      := "0.0.1",
-  organization := "io.github.cquiroz",
-  homepage := Some(url("https://github.com/cquiroz/sbt-locales")),
-  licenses := Seq("BSD 3-Clause License" -> url("https://opensource.org/licenses/BSD-3-Clause")),
   scalaVersion := scalaVer,
   javaOptions ++= Seq("-Dfile.encoding=UTF8"),
   autoAPIMappings := true
