@@ -1,14 +1,9 @@
 package locales
 
 import java.io.{ File => JFile }
-import better.files._
 import sbt._
 import sbt.util.Logger
 import Keys._
-import cats._
-import cats.implicits._
-import cats.effect
-import org.scalajs.sbtplugin.ScalaJSPlugin
 
 object LocalesPlugin extends AutoPlugin {
   sealed trait CLDRVersion {

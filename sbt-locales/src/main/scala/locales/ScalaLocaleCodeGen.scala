@@ -1,6 +1,5 @@
 package locales
 
-import cats._
 import cats.implicits._
 import java.io.{ File, FileInputStream, InputStreamReader }
 import java.nio.charset.Charset
@@ -347,7 +346,7 @@ object ScalaLocaleCodeGen {
           )
           sns -> sym
 
-        case s @ <symbols>{_*}</symbols> =>
+        case <symbols>{_*}</symbols> =>
           // We take advantage that all aliases on CLDR are to latn
           sns -> NumberSymbols.alias(sns, latn)
       }
@@ -548,7 +547,7 @@ object ScalaLocaleCodeGen {
     val names = clazzes.map(_.scalaSafeName)
 
     // Generate locales code
-    val stdTree = CodeGenerator.buildClassTree("data", clazzes, names, parentLocales, nsFilter)
+    val stdTree = CodeGenerator.buildClassTree(clazzes, names, parentLocales, nsFilter)
     writeGeneratedTree(base, "data", stdTree)
   }
 

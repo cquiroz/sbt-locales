@@ -2,12 +2,9 @@ package locales
 
 import better.files._
 import better.files.Dsl._
-import java.io.{ BufferedInputStream, BufferedOutputStream, InputStream }
-import java.io.{ FileOutputStream, FileInputStream, File => JFile }
-import java.nio.file.{ Files, StandardCopyOption }
+import java.io.InputStream
+import java.io.{ File => JFile }
 import java.net.URL
-import cats._
-import cats.implicits._
 import cats.effect.IO
 import sbt.Logger
 import sbt.io.{ IO => SbtIO }
@@ -21,7 +18,7 @@ object IOTasks {
     val localesDir = resourcesDir.toScala / "locales"
     val coreZip    = resourcesDir.toScala / "core.zip"
     if (!localesDir.exists) {
-      var url =
+      val url =
         s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"
       for {
         _ <- IO(
@@ -54,7 +51,6 @@ object IOTasks {
     )
 
   def providerFile(base: JFile, name: String): IO[File] = IO {
-    val pathSeparator   = JFile.separator
     val destinationPath = base.toScala
     destinationPath / name
   }
