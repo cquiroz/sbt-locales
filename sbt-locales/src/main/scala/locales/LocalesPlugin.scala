@@ -105,14 +105,17 @@ object LocalesPlugin extends AutoPlugin {
     (for {
       _ <- IOTasks.downloadCLDR(log, resourcesManaged, dbVersion)
       // Use it to detect if files have been already generated
-      m <- IOTasks.copyProvider(log, sourceManaged, "model.scala", "locales/cldr")
-      c <- IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")
-      p <- IOTasks.copyProvider(log, sourceManaged, "provider.scala", "locales/cldr")
-      l <- IOTasks.copyProvider(log, sourceManaged, "ldmlprovider.scala", "locales/cldr")
+      f1 <- IOTasks.copyProvider(log, sourceManaged, "calendar.scala", "locales/cldr")
+      f2 <- IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")
+      f3 <- IOTasks.copyProvider(log, sourceManaged, "currency.scala", "locales/cldr")
+      f4 <- IOTasks.copyProvider(log, sourceManaged, "number.scala", "locales/cldr")
+      f5 <- IOTasks.copyProvider(log, sourceManaged, "package.scala", "locales/cldr")
+      f6 <- IOTasks.copyProvider(log, sourceManaged, "provider.scala", "locales/cldr")
+      f7 <- IOTasks.copyProvider(log, sourceManaged, "ldmlprovider.scala", "locales/cldr")
       f <- IOTasks.generateCLDR(
         sourceManaged,
         resourcesManaged / "locales",
         filters
       )
-    } yield Seq(m, c, p, l) ++ f).unsafeRunSync.toSet
+    } yield Seq(f1, f2, f3, f4, f5, f6, f7) ++ f).unsafeRunSync.toSet
 }

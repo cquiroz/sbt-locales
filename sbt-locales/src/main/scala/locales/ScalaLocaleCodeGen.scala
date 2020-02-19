@@ -124,7 +124,7 @@ object ScalaLocaleCodeGen {
       for {
         ft <- (n \ formatType).toList
         p  <- ft \ sub \ "pattern"
-        v = { println(p \ "@alt"); (p \ "@alt").text }
+        v = (p \ "@alt").text
         t = (ft \ "@type").text
         if v != "variant"
       } yield formatIndex.getOrElse(t, sys.error(s"Uknown format $t")) -> p.text

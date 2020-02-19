@@ -2,6 +2,17 @@ package locales
 
 import cats.implicits._
 
+sealed trait CLDRVersion {
+  val id: String
+}
+case object LatestVersion extends CLDRVersion {
+  val id: String = "latest"
+}
+final case class Version(version: String) extends CLDRVersion {
+  val id: String = version
+}
+
+
 // Selection of Numbering Systems
 sealed trait NumberingSystemFilter extends Product with Serializable {
   def filter: String => Boolean
