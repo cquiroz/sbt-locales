@@ -1,4 +1,4 @@
-import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 import locales._
 
 lazy val root =
@@ -8,9 +8,7 @@ lazy val root =
     .settings(
       name := "no-filtering",
       scalaVersion := "2.12.10",
-      dbVersion := CLDRVersion.Version("35"),
-      localesFilter := LocalesFilter.All,
       nsFilter := NumberingSystemFilter.All,
-      calendarFilter := CalendarFilter.All,
+      currencyFilter := CurrencyFilter.Selection("EUR"),
       libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
     )

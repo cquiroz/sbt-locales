@@ -14,7 +14,7 @@ object CodeGenerator {
     parentLocales: Map[String, List[String]],
     nsFilter:      String => Boolean
   ): Tree = {
-    val langs = ldmls.map(_.scalaSafeName.split("_").toList)
+    val langs = ldmls.map(_.scalaSafeName.split("_").toList.tail)
     // Root must always be available
     val root = ldmls.find(_.scalaSafeName == "_root").get
 
@@ -48,15 +48,17 @@ object CodeGenerator {
     // http://www.unicode.org/reports/tr35/#Locale_Inheritance
     parentLocales
       .find(_._2.contains(ldml.fileName))
-      .fold(
-        // This searches based on the simple hierarchy resolution based on bundle_name
+      .fold { // This searches based on the simple hierarchy resolution based on bundle_name
         // http://www.unicode.org/reports/tr35/#Bundle_vs_Item_Lookup
-        ldml.scalaSafeName.substring(1).split("_").reverse.toList match {
+        ldml.scalaSafeName.split("_").toList.tail.reverse match {
           case x :: Nil if s"_$x" == root.scalaSafeName => None
           case _ :: Nil                                 => Some(root.scalaSafeName)
-          case _ :: xs if langs.contains(xs.reverse)    => Some(xs.reverse.mkString("_"))
+          case _ :: xs if langs.contains(xs.reverse) =>
+            Some(xs.reverse.mkString("_", "_", ""))
+          case _ =>
+            sys.error("Shouldn't happen")
         }
-      )(p => Some(p._1))
+      }(p => Some(p._1))
 
   def buildClassTree(
     root:          XMLLDML,
@@ -74,7 +76,7 @@ object CodeGenerator {
     val ldmlNumberPatternsSym   = getModule("NumberPatterns")
     val ldmlLocaleSym           = getModule("LDMLLocale")
 
-    val parent = findParent(root, langs, ldml, parentLocales).fold(NONE)(v => SOME(REF(v)))
+    val parent = findParent(root, langs, ldml, parentLocales).fold(NONE)(v => if (v.startsWith("_")) SOME(REF(v)) else SOME(REF(s"_$v")))
 
     val ldmlLocaleTree = Apply(
       ldmlLocaleSym,
