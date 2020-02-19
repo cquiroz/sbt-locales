@@ -526,8 +526,7 @@ object ScalaLocaleCodeGen {
 
     for {
       f <- files.map(k => k.toFile)
-      if filters.localesFilter.filter(f.getName.replaceAll("\\.xml$", "")) || f.getName == "en.xml" || f.getName == "root.xml"
-      //if f.getName == "en.xml" || f.getName == "root.xml"
+      if filters.localesFilter.filter(f.getName.replaceAll("\\.xml$", ""))
       r = new InputStreamReader(new FileInputStream(f), "UTF-8")
     } yield constructLDMLDescriptor(
       f,

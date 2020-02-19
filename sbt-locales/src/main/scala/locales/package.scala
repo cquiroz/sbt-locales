@@ -41,13 +41,13 @@ sealed trait CalendarFilter extends Product with Serializable {
 
 object CalendarFilter {
   case object None extends CalendarFilter {
-    def filter: String => Boolean = _ => false
+    def filter: String => Boolean = _ === "gregorian"
   }
   case object All extends CalendarFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends CalendarFilter {
-    def filter: String => Boolean = s.contains
+    def filter: String => Boolean = c => c === "gregorian" || s.contains(c)
   }
 
   object Selection {
@@ -63,13 +63,13 @@ sealed trait LocalesFilter extends Product with Serializable {
 
 object LocalesFilter {
   case object None extends LocalesFilter {
-    def filter: String => Boolean = _ => false
+    def filter: String => Boolean = l => l === "root" || l === "en"
   }
   case object All extends LocalesFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends LocalesFilter {
-    def filter: String => Boolean = s.contains
+    def filter: String => Boolean = l => l === "root" || l === "en" || s.contains(l)
   }
 
   object Selection {
