@@ -5,7 +5,7 @@ import org.portablescala.reflect.annotation.EnableReflectiveInstantiation
 
 @EnableReflectiveInstantiation
 object LocalesProvider extends LocalesProvider {
-  def root: LDML               = data.root
+  def root: LDML               = data._root
   def ldmls: Map[String, LDML] = Map.empty
   def latn: NumberingSystem    = data.numericsystems.latn
   def currencyData: CurrencyData =

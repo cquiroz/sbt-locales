@@ -83,8 +83,8 @@ final case class XMLLDML(
   numberPatterns:   NumberPatterns
 ) {
 
-  val scalaSafeName: String = {
+  val scalaSafeName: String =
     List(Some(locale.language), locale.script, locale.territory, locale.variant).flatten
-      .mkString("_")
-  }
+      .mkString("_", "_", "")
+
 }

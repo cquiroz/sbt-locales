@@ -16,7 +16,7 @@ object CodeGenerator {
   ): Tree = {
     val langs = ldmls.map(_.scalaSafeName.split("_").toList)
     // Root must always be available
-    val root = ldmls.find(_.scalaSafeName == "root").get
+    val root = ldmls.find(_.scalaSafeName == "_root").get
 
     val objectBlock = if (only.nonEmpty) {
       ldmls
@@ -51,10 +51,10 @@ object CodeGenerator {
       .fold(
         // This searches based on the simple hierarchy resolution based on bundle_name
         // http://www.unicode.org/reports/tr35/#Bundle_vs_Item_Lookup
-        ldml.scalaSafeName.split("_").reverse.toList match {
-          case x :: Nil if x == root.scalaSafeName   => None
-          case _ :: Nil                              => Some(root.scalaSafeName)
-          case _ :: xs if langs.contains(xs.reverse) => Some(xs.reverse.mkString("_"))
+        ldml.scalaSafeName.substring(1).split("_").reverse.toList match {
+          case x :: Nil if s"_$x" == root.scalaSafeName => None
+          case _ :: Nil                                 => Some(root.scalaSafeName)
+          case _ :: xs if langs.contains(xs.reverse)    => Some(xs.reverse.mkString("_"))
         }
       )(p => Some(p._1))
 

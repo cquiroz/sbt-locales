@@ -6,16 +6,6 @@ import sbt.util.Logger
 import Keys._
 
 object LocalesPlugin extends AutoPlugin {
-  sealed trait CLDRVersion {
-    val id: String
-  }
-  case object LatestVersion extends CLDRVersion {
-    val id: String = "latest"
-  }
-  final case class Version(version: String) extends CLDRVersion {
-    val id: String = version
-  }
-
   object autoImport {
 
     /**
@@ -84,7 +74,7 @@ object LocalesPlugin extends AutoPlugin {
     currencyRegionFilter := CurrencyRegionFilter.None,
     supportDateTimeFormats := true,
     supportNumberFormats := false,
-    dbVersion := LatestVersion
+    dbVersion := CLDRVersion.LatestVersion
   )
   // a group of settings that are automatically added to projects.
   override val projectSettings =
