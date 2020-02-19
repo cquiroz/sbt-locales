@@ -18,8 +18,10 @@ object IOTasks {
     val localesDir = resourcesDir.toScala / "locales"
     val coreZip    = resourcesDir.toScala / "core.zip"
     if (!localesDir.exists) {
+      // var url =
+      //   s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"
       val url =
-        s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"
+        s"file:///Users/cquiroz/core.zip"
       for {
         _ <- IO(
           log
