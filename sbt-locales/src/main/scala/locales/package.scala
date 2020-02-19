@@ -12,7 +12,6 @@ final case class Version(version: String) extends CLDRVersion {
   val id: String = version
 }
 
-
 // Selection of Numbering Systems
 sealed trait NumberingSystemFilter extends Product with Serializable {
   def filter: String => Boolean
