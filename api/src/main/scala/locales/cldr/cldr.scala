@@ -25,7 +25,7 @@ case class LDML(
   parent:           Option[LDML],
   locale:           LDMLLocale,
   defaultNS:        Option[NumberingSystem],
-  digitSymbols:     List[Symbols] = Nil,
+  digitSymbols:     List[Symbols],
   calendarSymbols:  Option[CalendarSymbols],
   calendarPatterns: Option[CalendarPatterns],
   currencies:       List[NumberCurrency],

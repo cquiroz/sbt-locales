@@ -21,7 +21,7 @@ sealed trait NumberingSystemFilter extends Product with Serializable {
 }
 
 object NumberingSystemFilter {
-  case object None extends NumberingSystemFilter {
+  case object Minimal extends NumberingSystemFilter {
     def filter: String => Boolean = _ === "latn"
   }
   case object All extends NumberingSystemFilter {
@@ -43,7 +43,7 @@ sealed trait CalendarFilter extends Product with Serializable {
 }
 
 object CalendarFilter {
-  case object None extends CalendarFilter {
+  case object Minimal extends CalendarFilter {
     def filter: String => Boolean = _ === "gregorian"
   }
   case object All extends CalendarFilter {
@@ -65,7 +65,7 @@ sealed trait LocalesFilter extends Product with Serializable {
 }
 
 object LocalesFilter {
-  case object None extends LocalesFilter {
+  case object Minimal extends LocalesFilter {
     def filter: String => Boolean = l => l === "root" || l === "en"
   }
   case object All extends LocalesFilter {

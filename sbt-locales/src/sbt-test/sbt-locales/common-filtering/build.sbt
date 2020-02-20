@@ -8,7 +8,7 @@ lazy val root =
     .settings(
       name := "no-filtering",
       scalaVersion := "2.12.10",
-      nsFilter := NumberingSystemFilter.All,
+      nsFilter := NumberingSystemFilter.Minimal,
       currencyFilter := CurrencyFilter.Selection("EUR"),
       libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
     )

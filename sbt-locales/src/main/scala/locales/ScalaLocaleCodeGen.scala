@@ -309,7 +309,7 @@ object ScalaLocaleCodeGen {
         Some(charInt.toChar)
       }
 
-    val symbols = (xml \ "numbers" \\ "symbols").flatMap { s =>
+    val symbols: Map[NumberingSystem, NumberSymbols] = (xml \ "numbers" \\ "symbols").flatMap { s =>
       // http://www.unicode.org/reports/tr35/tr35-numbers.html#Numbering_Systems
       // By default, number symbols without a specific numberSystem attribute
       // are assumed to be used for the "latn" numbering system, which uses
@@ -351,7 +351,7 @@ object ScalaLocaleCodeGen {
           sns -> NumberSymbols.alias(sns, latn)
       }
       nsSymbols
-    }
+    }.toMap
 
     val currencies = (xml \ "numbers" \ "currencies" \\ "currency")
       .filter { c =>
@@ -376,7 +376,7 @@ object ScalaLocaleCodeGen {
       LDMLLocale(language, territory, variant, script),
       fileName,
       defaultNS.flatMap(ns.get),
-      symbols.toMap.filter(_ => filters.supportNumberFormats),
+      symbols.filterKeys(ns => filters.nsFilter.filter(ns.id)),
       gregorian.flatten.headOption.filter(_ => filters.supportDateTimeFormats),
       gregorianDatePatterns.flatten.headOption.filter(_ => filters.supportDateTimeFormats),
       currencies,
