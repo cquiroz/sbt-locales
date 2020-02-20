@@ -76,7 +76,9 @@ object CodeGenerator {
     val ldmlNumberPatternsSym   = getModule("NumberPatterns")
     val ldmlLocaleSym           = getModule("LDMLLocale")
 
-    val parent = findParent(root, langs, ldml, parentLocales).fold(NONE)(v => if (v.startsWith("_")) SOME(REF(v)) else SOME(REF(s"_$v")))
+    val parent = findParent(root, langs, ldml, parentLocales).fold(NONE)(v =>
+      if (v.startsWith("_")) SOME(REF(v)) else SOME(REF(s"_$v"))
+    )
 
     val ldmlLocaleTree = Apply(
       ldmlLocaleSym,

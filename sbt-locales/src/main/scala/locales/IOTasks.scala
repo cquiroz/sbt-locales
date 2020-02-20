@@ -13,7 +13,7 @@ object IOTasks {
   def downloadCLDR(
     log:          Logger,
     resourcesDir: JFile,
-    cldrVersion:  LocalesPlugin.CLDRVersion
+    cldrVersion:  CLDRVersion
   ): IO[Unit] = {
     val localesDir = resourcesDir.toScala / "locales"
     val coreZip    = resourcesDir.toScala / "core.zip"
