@@ -18,6 +18,7 @@ object LocalesPlugin extends AutoPlugin {
     val currencyRegionFilter   = settingKey[CurrencyRegionFilter]("Filter for currency regions")
     val supportDateTimeFormats = settingKey[Boolean]("Include data to format dates and times")
     val supportNumberFormats   = settingKey[Boolean]("Include number formats")
+    val supportISOCodes        = settingKey[Boolean]("Include iso codes metadata")
     val dbVersion              = settingKey[CLDRVersion]("Version of the cldr database")
     val localesCodeGen =
       taskKey[Seq[JFile]]("Generate scala.js compatible database of tzdb data")
@@ -45,7 +46,8 @@ object LocalesPlugin extends AutoPlugin {
                   currencyFilter.value,
                   currencyRegionFilter.value,
                   supportDateTimeFormats.value,
-                  supportNumberFormats.value
+                  supportNumberFormats.value,
+                  supportISOCodes.value
                 )
                 localesCodeGenImpl(
                   sourceManaged    = (sourceManaged in Compile).value,
@@ -67,13 +69,14 @@ object LocalesPlugin extends AutoPlugin {
   override def requires = org.scalajs.sbtplugin.ScalaJSPlugin
   // override def requires = ScalaJSPlugin // org.scalajs.sbtplugin.ScalaJSPlugin
   override lazy val buildSettings = Seq(
-    localesFilter := LocalesFilter.Selection("root"),
-    nsFilter := NumberingSystemFilter.Selection("latm"),
-    calendarFilter := CalendarFilter.Selection("gregorian"),
+    localesFilter := LocalesFilter.Minimal,
+    nsFilter := NumberingSystemFilter.Minimal,
+    calendarFilter := CalendarFilter.Minimal,
     currencyFilter := CurrencyFilter.None,
     currencyRegionFilter := CurrencyRegionFilter.None,
     supportDateTimeFormats := true,
     supportNumberFormats := false,
+    supportISOCodes := false,
     dbVersion := CLDRVersion.LatestVersion
   )
   // a group of settings that are automatically added to projects.

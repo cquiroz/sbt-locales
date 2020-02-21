@@ -584,7 +584,8 @@ object ScalaLocaleCodeGen {
     base:              File,
     clazzes:           List[XMLLDML],
     territoryCodes:    Map[String, String],
-    iso3LanguageCodes: Map[String, String]
+    iso3LanguageCodes: Map[String, String],
+    filters:           Filters
   ): File = {
     val isoCountryCodes = clazzes
       .flatMap(_.locale.territory)
@@ -604,8 +605,9 @@ object ScalaLocaleCodeGen {
       CodeGenerator.metadata(isoCountryCodes,
                              isoLanguages,
                              scripts,
-                             territoryCodes,
-                             iso3LanguageCodes)
+                             territoryCodes.filterKeys(isoCountryCodes.contains),
+                             iso3LanguageCodes.filterKeys(isoLanguages.contains),
+                             filters.supportISOCodes)
     )
   }
 
@@ -638,7 +640,7 @@ object ScalaLocaleCodeGen {
     val iso3LanguageCodes = readIso3LanguageCodes(
       this.getClass.getResourceAsStream("/ISO-639-2_utf-8.2019-05-29.txt")
     )
-    val f3            = generateMetadataFile(base, ldmls, territoryCodes, iso3LanguageCodes)
+    val f3            = generateMetadataFile(base, ldmls, territoryCodes, iso3LanguageCodes, filters)
     val parentLocales = readParentLocales(data)
     val f4            = generateLocalesFile(base, ldmls, parentLocales, filters.nsFilter.filter)
 

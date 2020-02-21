@@ -32,7 +32,7 @@ object NumberingSystemFilter {
   }
 
   object Selection {
-    def apply(s: String): Selection = Selection(List(s))
+    def apply(s: String*): Selection = Selection(s.toList)
   }
 
 }
@@ -54,7 +54,7 @@ object CalendarFilter {
   }
 
   object Selection {
-    def apply(s: String): Selection = Selection(List(s))
+    def apply(s: String*): Selection = Selection(s.toList)
   }
 
 }
@@ -76,7 +76,7 @@ object LocalesFilter {
   }
 
   object Selection {
-    def apply(s: String): Selection = Selection(List(s))
+    def apply(s: String*): Selection = Selection(s.toList)
   }
 
 }
@@ -98,7 +98,7 @@ object CurrencyFilter {
   }
 
   object Selection {
-    def apply(s: String): Selection = Selection(List(s))
+    def apply(s: String*): Selection = Selection(s.toList)
   }
 
 }
@@ -120,7 +120,7 @@ object CurrencyRegionFilter {
   }
 
   object Selection {
-    def apply(s: String): Selection = Selection(List(s))
+    def apply(s: String*): Selection = Selection(s.toList)
   }
 
 }
@@ -131,5 +131,6 @@ final case class Filters(
   currencyFilter:         CurrencyFilter,
   currencyRegionFilter:   CurrencyRegionFilter,
   supportDateTimeFormats: Boolean,
-  supportNumberFormats:   Boolean
+  supportNumberFormats:   Boolean,
+  supportISOCodes:        Boolean
 )
