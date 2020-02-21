@@ -602,12 +602,14 @@ object ScalaLocaleCodeGen {
     writeGeneratedTree(
       base,
       "metadata",
-      CodeGenerator.metadata(isoCountryCodes,
-                             isoLanguages,
-                             scripts,
-                             territoryCodes.filterKeys(isoCountryCodes.contains),
-                             iso3LanguageCodes.filterKeys(isoLanguages.contains),
-                             filters.supportISOCodes)
+      CodeGenerator.metadata(
+        isoCountryCodes,
+        isoLanguages,
+        scripts,
+        territoryCodes.filterKeys(isoCountryCodes.contains),
+        iso3LanguageCodes.filterKeys(isoLanguages.contains),
+        filters.supportISOCodes
+      )
     )
   }
 
