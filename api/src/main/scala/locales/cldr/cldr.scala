@@ -6,6 +6,7 @@ final case class CLDRMetadata(
   isoCountries:  Array[String],
   iso3Countries: Map[String, String],
   isoLanguages:  Array[String],
+  iso3Languages: Map[String, String],
   scripts:       Array[String]
 )
 

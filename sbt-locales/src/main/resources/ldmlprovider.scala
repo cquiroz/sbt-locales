@@ -19,5 +19,9 @@ object LocalesProvider extends LocalesProvider {
       data.currencydata.numericCodes
     )
   def metadata: CLDRMetadata =
-    new CLDRMetadata(data.metadata.isoCountries, data.metadata.isoLanguages, data.metadata.scripts)
+    new CLDRMetadata(data.metadata.isoCountries,
+                     data.metadata.iso3Countries,
+                     data.metadata.isoLanguages,
+                     data.metadata.iso3Languages,
+                     data.metadata.scripts)
 }

@@ -1,7 +1,7 @@
 package locales
 
 import cats.implicits._
-import java.io.{ File, FileInputStream, InputStreamReader }
+import java.io.{ File, FileInputStream, InputStream, InputStreamReader }
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.util.function.IntPredicate
@@ -558,6 +558,19 @@ object ScalaLocaleCodeGen {
       entry  = alpha3.map(alpha2 -> _)
     } yield entry).flatten.toMap
 
+  def readIso3LanguageCodes(in: InputStream): Map[String, String] =
+    scala.io.Source
+      .fromInputStream(in)
+      .getLines()
+      .flatMap { line =>
+        line.split('|') match {
+          case Array(bib, ter, alpha2, _, _) if alpha2.nonEmpty =>
+            if (ter.nonEmpty) Some(alpha2 -> ter) else Some(alpha2 -> bib)
+          case _ => None
+        }
+      }
+      .toMap
+
   def readTerritoryCodes(data: File): Map[String, String] = {
     val territorySupplementalData = data.toPath
       .resolve("common")
@@ -568,9 +581,10 @@ object ScalaLocaleCodeGen {
   }
 
   def generateMetadataFile(
-    base:           File,
-    clazzes:        List[XMLLDML],
-    territoryCodes: Map[String, String]
+    base:              File,
+    clazzes:           List[XMLLDML],
+    territoryCodes:    Map[String, String],
+    iso3LanguageCodes: Map[String, String]
   ): File = {
     val isoCountryCodes = clazzes
       .flatMap(_.locale.territory)
@@ -587,7 +601,11 @@ object ScalaLocaleCodeGen {
     writeGeneratedTree(
       base,
       "metadata",
-      CodeGenerator.metadata(isoCountryCodes, isoLanguages, scripts, territoryCodes)
+      CodeGenerator.metadata(isoCountryCodes,
+                             isoLanguages,
+                             scripts,
+                             territoryCodes,
+                             iso3LanguageCodes)
     )
   }
 
@@ -614,10 +632,13 @@ object ScalaLocaleCodeGen {
     // latn NS must exist, break if not found
     val latnNS = numericSystemsMap("latn")
 
-    val territoryCodes = readTerritoryCodes(data)
-    val ldmls          = buildLDMLDescriptors(data, numericSystemsMap, latnNS, filters)
+    val ldmls = buildLDMLDescriptors(data, numericSystemsMap, latnNS, filters)
 
-    val f3            = generateMetadataFile(base, ldmls, territoryCodes)
+    val territoryCodes = readTerritoryCodes(data)
+    val iso3LanguageCodes = readIso3LanguageCodes(
+      this.getClass.getResourceAsStream("/ISO-639-2_utf-8.2019-05-29.txt")
+    )
+    val f3            = generateMetadataFile(base, ldmls, territoryCodes, iso3LanguageCodes)
     val parentLocales = readParentLocales(data)
     val f4            = generateLocalesFile(base, ldmls, parentLocales, filters.nsFilter.filter)
 
