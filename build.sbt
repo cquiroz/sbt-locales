@@ -4,13 +4,15 @@ import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
 val scalaVer = "2.12.10"
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 inThisBuild(
   List(
     organization := "io.github.cquiroz",
     homepage := Some(url("https://github.com/cquiroz/sbt-locales")),
     licenses := Seq("BSD 3-Clause License" -> url("https://opensource.org/licenses/BSD-3-Clause")),
-      developers := List(
-        Developer("cquiroz",
+    developers := List(
+      Developer("cquiroz",
                 "Carlos Quiroz",
                 "carlos.m.quiroz@gmail.com",
                 url("https://github.com/cquiroz"))
@@ -40,14 +42,13 @@ lazy val api = crossProject(JSPlatform, JVMPlatform) //, NativePlatform)
   .settings(
     name := "cldr-api",
     scalaVersion := "2.12.10",
-    crossScalaVersions := {
-      if (scalaJSVersion.startsWith("0.6")) {
-        Seq("2.10.7", "2.11.12", "2.12.10", "2.13.1")
-      } else {
-        Seq("2.11.12", "2.12.10", "2.13.1")
-      }
-    },
+    crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.1"),
+    libraryDependencies += "org.scalameta" %%% "munit" % "0.5.2",
+    testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
+  )
+  .jsSettings(
+    scalaJSModuleKind := ModuleKind.CommonJSModule
   )
 
 lazy val sbt_locales = project
