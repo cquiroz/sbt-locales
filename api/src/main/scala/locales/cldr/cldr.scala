@@ -3,9 +3,10 @@ package locales.cldr
 import java.util.Locale
 
 final case class CLDRMetadata(
-  isoCountries: Array[String],
-  isoLanguages: Array[String],
-  scripts:      Array[String]
+  isoCountries:  Array[String],
+  iso3Countries: Map[String, String],
+  isoLanguages:  Array[String],
+  scripts:       Array[String]
 )
 
 /**

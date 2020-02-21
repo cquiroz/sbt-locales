@@ -16,7 +16,7 @@ object IOTasks {
     cldrVersion:  CLDRVersion
   ): IO[Unit] = {
     val localesDir = resourcesDir.toScala / "locales"
-    val coreZip    = resourcesDir.toScala / "core.zip"
+    val coreZip    = resourcesDir.toScala / s"core-${cldrVersion.id}.zip"
     if (!localesDir.exists) {
       val url =
         s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"

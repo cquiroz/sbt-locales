@@ -550,7 +550,28 @@ object ScalaLocaleCodeGen {
     writeGeneratedTree(base, "data", stdTree)
   }
 
-  def generateMetadataFile(base: File, clazzes: List[XMLLDML]): File = {
+  def parseTerritoryCodes(xml: Node): Map[String, String] =
+    (for {
+      territoryCodes <- xml \ "codeMappings" \ "territoryCodes"
+      alpha2 = (territoryCodes \ "@type").text
+      alpha3 = Option((territoryCodes \ "@alpha3").text).filter(_.nonEmpty)
+      entry  = alpha3.map(alpha2 -> _)
+    } yield entry).flatten.toMap
+
+  def readTerritoryCodes(data: File): Map[String, String] = {
+    val territorySupplementalData = data.toPath
+      .resolve("common")
+      .resolve("supplemental")
+      .resolve("supplementalData.xml")
+      .toFile
+    parseTerritoryCodes(XML.withSAXParser(parser).loadFile(territorySupplementalData))
+  }
+
+  def generateMetadataFile(
+    base:           File,
+    clazzes:        List[XMLLDML],
+    territoryCodes: Map[String, String]
+  ): File = {
     val isoCountryCodes = clazzes
       .flatMap(_.locale.territory)
       .distinct
@@ -566,7 +587,7 @@ object ScalaLocaleCodeGen {
     writeGeneratedTree(
       base,
       "metadata",
-      CodeGenerator.metadata(isoCountryCodes, isoLanguages, scripts)
+      CodeGenerator.metadata(isoCountryCodes, isoLanguages, scripts, territoryCodes)
     )
   }
 
@@ -593,9 +614,10 @@ object ScalaLocaleCodeGen {
     // latn NS must exist, break if not found
     val latnNS = numericSystemsMap("latn")
 
-    val ldmls = buildLDMLDescriptors(data, numericSystemsMap, latnNS, filters)
+    val territoryCodes = readTerritoryCodes(data)
+    val ldmls          = buildLDMLDescriptors(data, numericSystemsMap, latnNS, filters)
 
-    val f3            = generateMetadataFile(base, ldmls)
+    val f3            = generateMetadataFile(base, ldmls, territoryCodes)
     val parentLocales = readParentLocales(data)
     val f4            = generateLocalesFile(base, ldmls, parentLocales, filters.nsFilter.filter)
 
