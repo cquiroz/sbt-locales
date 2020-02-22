@@ -61,7 +61,6 @@ lazy val sbt_locales = project
     description := "Sbt plugin to build custom locale databases",
     scalaVersion := "2.12.10",
     crossScalaVersions := Seq(),
-    publishArtifact in (Compile, packageDoc) := false,
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
