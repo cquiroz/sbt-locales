@@ -11,17 +11,15 @@ import sbt.io.{ IO => SbtIO }
 
 object IOTasks {
   def downloadCLDR(
+    coreZip:      JFile,
     log:          Logger,
     resourcesDir: JFile,
     cldrVersion:  CLDRVersion
   ): IO[Unit] = {
     val localesDir = resourcesDir.toScala / "locales"
-    val coreZip    = resourcesDir.toScala / s"core-${cldrVersion.id}.zip"
     if (!localesDir.exists) {
       val url =
         s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"
-      // val url =
-      //   s"file:///Users/cquiroz/core.zip"
       for {
         _ <- IO(
           log
