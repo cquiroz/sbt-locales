@@ -263,7 +263,9 @@ object CodeGenerator {
         ),
         VAL("fractions", "List[CurrencyDataFractionsInfo]") := LIST(
           c.fractions
-            .filter(c => filters.currencyFilter.filter(c.currencyCode))
+            .filter { c =>
+              c.currencyCode == "DEFAULT" | filters.currencyFilter.filter(c.currencyCode)
+            }
             .map { info: CurrencyDataFractionsInfo =>
               REF("CurrencyDataFractionsInfo").APPLY(
                 LIT(info.currencyCode),
@@ -276,7 +278,7 @@ object CodeGenerator {
         ),
         VAL("regions", "List[CurrencyDataRegion]") := LIST(
           c.regions
-            .filter(c => filters.currencyRegionFilter.filter(c.countryCode))
+            .filter(c => c.currencies.map(_.currencyCode).exists(filters.currencyFilter.filter))
             .map { region: CurrencyDataRegion =>
               REF("CurrencyDataRegion").APPLY(
                 LIT(region.countryCode),

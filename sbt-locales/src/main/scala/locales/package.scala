@@ -103,33 +103,11 @@ object CurrencyFilter {
 
 }
 
-// Selection of Currencies
-sealed trait CurrencyRegionFilter extends Product with Serializable {
-  def filter: String => Boolean
-}
-
-object CurrencyRegionFilter {
-  case object None extends CurrencyRegionFilter {
-    def filter: String => Boolean = _ => false
-  }
-  case object All extends CurrencyRegionFilter {
-    def filter: String => Boolean = _ => true
-  }
-  final case class Selection(s: List[String]) extends CurrencyRegionFilter {
-    def filter: String => Boolean = s.contains
-  }
-
-  object Selection {
-    def apply(s: String*): Selection = Selection(s.toList)
-  }
-
-}
 final case class Filters(
   localesFilter:          LocalesFilter,
   nsFilter:               NumberingSystemFilter,
   calendarFilter:         CalendarFilter,
   currencyFilter:         CurrencyFilter,
-  currencyRegionFilter:   CurrencyRegionFilter,
   supportDateTimeFormats: Boolean,
   supportNumberFormats:   Boolean,
   supportISOCodes:        Boolean

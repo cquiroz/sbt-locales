@@ -15,7 +15,6 @@ object LocalesPlugin extends AutoPlugin {
     val calendarFilter         = settingKey[CalendarFilter]("Filter for calendars")
     val localesFilter          = settingKey[LocalesFilter]("Filter for locales")
     val currencyFilter         = settingKey[CurrencyFilter]("Filter for currencies")
-    val currencyRegionFilter   = settingKey[CurrencyRegionFilter]("Filter for currency regions")
     val supportDateTimeFormats = settingKey[Boolean]("Include data to format dates and times")
     val supportNumberFormats   = settingKey[Boolean]("Include number formats")
     val supportISOCodes        = settingKey[Boolean]("Include iso codes metadata")
@@ -44,7 +43,6 @@ object LocalesPlugin extends AutoPlugin {
                   nsFilter.value,
                   calendarFilter.value,
                   currencyFilter.value,
-                  currencyRegionFilter.value,
                   supportDateTimeFormats.value,
                   supportNumberFormats.value,
                   supportISOCodes.value
@@ -73,7 +71,6 @@ object LocalesPlugin extends AutoPlugin {
     nsFilter := NumberingSystemFilter.Minimal,
     calendarFilter := CalendarFilter.Minimal,
     currencyFilter := CurrencyFilter.None,
-    currencyRegionFilter := CurrencyRegionFilter.None,
     supportDateTimeFormats := true,
     supportNumberFormats := false,
     supportISOCodes := false,
