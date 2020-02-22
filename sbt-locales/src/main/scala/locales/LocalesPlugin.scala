@@ -27,9 +27,9 @@ object LocalesPlugin extends AutoPlugin {
           localesCodeGen.value
         },
         localesCodeGen := Def.task {
-          val cacheLocation    = streams.value.cacheDirectory / s"cldr-locales"
-          val log              = streams.value.log
-          val coreZip          = cacheLocation / s"core-${dbVersion.value.id}.zip"
+          val cacheLocation = streams.value.cacheDirectory / s"cldr-locales"
+          val log           = streams.value.log
+          val coreZip       = cacheLocation / s"core-${dbVersion.value.id}.zip"
           val cachedActionFunction: Set[JFile] => Set[JFile] =
             FileFunction.cached(
               cacheLocation,
