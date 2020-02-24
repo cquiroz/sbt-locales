@@ -2,7 +2,8 @@ import sbt._
 import sbt.io.Using
 import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
-val scalaVer = "2.12.10"
+val scalaJSVersion =
+  Option(System.getenv("SCALAJS_VERSION")).getOrElse("1.0.0")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -28,8 +29,7 @@ inThisBuild(
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
-  // version      := "0.0.1",
-  scalaVersion := scalaVer,
+  scalaVersion := "2.12.10",
   javaOptions ++= Seq("-Dfile.encoding=UTF8"),
   autoAPIMappings := true
 )
@@ -48,7 +48,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform) //, NativePlatform)
     libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
   )
   .jsSettings(
-    scalaJSModuleKind := ModuleKind.CommonJSModule
+    scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule))
   )
 
 lazy val sbt_locales = project
@@ -67,7 +67,7 @@ lazy val sbt_locales = project
     },
     resources in Compile ++= (sources in (api.jvm, Compile)).value,
     scriptedBufferLog := false,
-    addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.32"),
+    addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion),
     addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.0.0"),
     libraryDependencies ++= Seq(
       "com.eed3si9n" %% "gigahorse-okhttp" % "0.5.0",

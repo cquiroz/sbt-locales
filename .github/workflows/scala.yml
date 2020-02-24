@@ -26,3 +26,5 @@ jobs:
         run: csbt scalafmtCheckAll
       - name: Run tests
         run: csbt +apiJVM/test +apiJS/test +apiJVM/publishLocal sbt_locales/scripted
+      - name: Run tests 0.6
+        run: SCALAJS_VERSION=0.6.32 csbt clean +apiJVM/test +apiJS/test +apiJVM/publishLocal sbt_locales/scripted
