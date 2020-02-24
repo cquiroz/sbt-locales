@@ -60,6 +60,7 @@ lazy val sbt_locales = project
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
+    skip in publish := scalaJSVersion.startsWith("0.6"),
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
     scalaVersion := "2.12.10",
