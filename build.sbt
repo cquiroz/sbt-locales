@@ -3,7 +3,7 @@ import sbt.io.Using
 import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
 val scalaJSVersion =
-  Option(System.getenv("SCALAJS_VERSION")).getOrElse("1.0.0")
+  Option(System.getenv("SCALAJS_VERSION")).getOrElse("0.6.32")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -50,6 +50,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
   .jvmSettings(
     skip.in(publish) := scalaJSVersion.startsWith("0.6")
   )
+  .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
 lazy val sbt_locales = project
   .in(file("sbt-locales"))
