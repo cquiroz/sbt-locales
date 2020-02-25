@@ -63,9 +63,6 @@ object LocalesPlugin extends AutoPlugin {
 
   import autoImport._
   override def trigger = noTrigger
-  // override def requires = plugin.JSPlugin
-  override def requires = org.scalajs.sbtplugin.ScalaJSPlugin
-  // override def requires = ScalaJSPlugin // org.scalajs.sbtplugin.ScalaJSPlugin
   override lazy val buildSettings = Seq(
     localesFilter := LocalesFilter.Minimal,
     nsFilter := NumberingSystemFilter.Minimal,
