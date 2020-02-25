@@ -48,7 +48,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
   )
   .jvmSettings(
-    skip.in(publish) := scalaJSVersion.startsWith("0.6")
+    skip.in(publish) := scalaJSVersion.startsWith("1")
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
