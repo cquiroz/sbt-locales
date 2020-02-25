@@ -34,7 +34,7 @@ lazy val commonSettings = Seq(
   autoAPIMappings := true
 )
 
-lazy val api = crossProject(JSPlatform, JVMPlatform) //, NativePlatform)
+lazy val api = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("api"))
   .settings(commonSettings: _*)
@@ -47,11 +47,8 @@ lazy val api = crossProject(JSPlatform, JVMPlatform) //, NativePlatform)
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
   )
-  .jsSettings(
-    scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule))
-  )
   .jvmSettings(
-    skip.in(publish) := scalaJSVersion.startsWith("0.6")
+    skip.in(publish) := scalaJSVersion.startsWith("1.0.0")
   )
 
 lazy val sbt_locales = project
@@ -60,7 +57,7 @@ lazy val sbt_locales = project
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
-    skip in publish := scalaJSVersion.startsWith("0.6"),
+    skip in publish := scalaJSVersion.startsWith("1.0.0"),
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
     scalaVersion := "2.12.10",
