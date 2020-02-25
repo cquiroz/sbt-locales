@@ -24,7 +24,7 @@ jobs:
           key: sbt-${{ hashFiles('**/build.sbt') }}
       - name: Checking your code format
         run: csbt scalafmtCheckAll
+      - name: Run tests 0.6
+        run: SCALAJS_VERSION=0.6.32 csbt clean +apiJVM/test +apiJS/test +apiJVM/publishLocal sbt_locales/publistLocal sbt_locales/scripted
       - name: Run tests
         run: csbt +apiJVM/test +apiJS/test +apiJVM/publishLocal sbt_locales/scripted
-      - name: Run tests 0.6
-        run: SCALAJS_VERSION=0.6.32 csbt clean +apiJVM/test +apiJS/test +apiJVM/publishLocal sbt_locales/scripted
