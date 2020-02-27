@@ -11,5 +11,6 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
 addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.3.9")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.3.0")
-addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.0")
-addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.1.10")
+
+addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.2")
+addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.1.11")
