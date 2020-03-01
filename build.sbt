@@ -74,7 +74,7 @@ lazy val sbt_locales = project
       "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
       "com.github.pathikrit" %% "better-files" % "3.8.0",
       "org.typelevel" %% "cats-core" % "2.1.1",
-      "org.typelevel" %% "cats-effect" % "2.1.1",
+      "org.typelevel" %% "cats-effect" % "2.1.2",
       "com.eed3si9n" %% "treehugger" % "0.4.4"
     )
   )
