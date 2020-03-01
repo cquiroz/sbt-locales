@@ -72,7 +72,8 @@ object LocalesFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends LocalesFilter {
-    def filter: String => Boolean = l => l === "root" || l === "en" || s.contains(l)
+    def filter: String => Boolean =
+      l => l === "root" || l === "en" || s.map(_.replaceAll("-", "_")).contains(l)
   }
 
   object Selection {

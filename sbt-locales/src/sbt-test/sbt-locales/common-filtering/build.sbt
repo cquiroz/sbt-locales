@@ -8,7 +8,7 @@ lazy val root =
     .settings(
       name := "no-filtering",
       scalaVersion := "2.12.10",
-      localesFilter := LocalesFilter.Selection("en_US", "fi", "fi_FI"),
+      localesFilter := LocalesFilter.Selection("en-US", "fi", "fi-FI"),
       nsFilter := NumberingSystemFilter.Minimal,
       currencyFilter := CurrencyFilter.Selection("EUR"),
       supportISOCodes := true,
