@@ -1,5 +1,7 @@
 # sbt-locales
 
+![build](https://github.com/cquiroz/sbt-locales/workflows/build/badge.svg)
+
 An sbt plugin that can create custom locales databases to be used with [scala-java-locales](https://github.com/cquiroz/scala-java-locales)
 and [scala-java-time](https://github.com/cquiroz/scala-java-time)
 
