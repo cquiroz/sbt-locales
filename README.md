@@ -25,7 +25,7 @@ addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "0.2.0")
 Most applications just need a few locales and may need for example only dates.
 The code generated will thus include only the minimal data
 
-* *dbVersion*: **Default is latest**. It is possible to specify the CLDR version.
+* *cldrVersion*: **Default is latest**. It is possible to specify the CLDR version.
 * *localesFilter*: **Default includes english**. You can add locales by tag, e.g.
  `en-US`, `fi`, `es-CL`. Note that `root` and` en` are always included. If you include a
  locale for a country you'd need to also include its parent, e.g. to include `fi-FI` you

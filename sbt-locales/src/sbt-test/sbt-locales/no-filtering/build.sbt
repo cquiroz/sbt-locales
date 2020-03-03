@@ -8,7 +8,7 @@ lazy val root =
     .settings(
       name := "no-filtering",
       scalaVersion := "2.12.10",
-      dbVersion := CLDRVersion.Version("35"),
+      cldrVersion := CLDRVersion.Version("35"),
       localesFilter := LocalesFilter.All,
       nsFilter := NumberingSystemFilter.All,
       calendarFilter := CalendarFilter.All,
