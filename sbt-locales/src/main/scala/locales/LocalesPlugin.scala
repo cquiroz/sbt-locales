@@ -18,7 +18,7 @@ object LocalesPlugin extends AutoPlugin {
     val supportDateTimeFormats = settingKey[Boolean]("Include data to format dates and times")
     val supportNumberFormats   = settingKey[Boolean]("Include number formats")
     val supportISOCodes        = settingKey[Boolean]("Include iso codes metadata")
-    val dbVersion              = settingKey[CLDRVersion]("Version of the cldr database")
+    val cldrVersion            = settingKey[CLDRVersion]("Version of the cldr database")
     val localesCodeGen =
       taskKey[Seq[JFile]]("Generate scala.js compatible database of tzdb data")
     lazy val baseLocalesSettings: Seq[Def.Setting[_]] =
@@ -29,7 +29,7 @@ object LocalesPlugin extends AutoPlugin {
         localesCodeGen := Def.task {
           val cacheLocation = streams.value.cacheDirectory / s"cldr-locales"
           val log           = streams.value.log
-          val coreZip       = cacheLocation / s"core-${dbVersion.value.id}.zip"
+          val coreZip       = cacheLocation / s"core-${cldrVersion.value.id}.zip"
           val cachedActionFunction: Set[JFile] => Set[JFile] =
             FileFunction.cached(
               cacheLocation,
@@ -51,8 +51,8 @@ object LocalesPlugin extends AutoPlugin {
                   sourceManaged    = (sourceManaged in Compile).value,
                   resourcesManaged = (resourceManaged in Compile).value,
                   filters,
-                  dbVersion = dbVersion.value,
-                  log       = log
+                  cldrVersion = cldrVersion.value,
+                  log         = log
                 )
             }
           cachedActionFunction.apply(Set(coreZip)).toSeq
@@ -71,7 +71,7 @@ object LocalesPlugin extends AutoPlugin {
     supportDateTimeFormats := true,
     supportNumberFormats := false,
     supportISOCodes := false,
-    dbVersion := CLDRVersion.LatestVersion
+    cldrVersion := CLDRVersion.LatestVersion
   )
   // a group of settings that are automatically added to projects.
   override val projectSettings =
@@ -82,11 +82,11 @@ object LocalesPlugin extends AutoPlugin {
     sourceManaged:    JFile,
     resourcesManaged: JFile,
     filters:          Filters,
-    dbVersion:        CLDRVersion,
+    cldrVersion:      CLDRVersion,
     log:              Logger
   ): Set[JFile] =
     (for {
-      _ <- IOTasks.downloadCLDR(coreZip, log, resourcesManaged, dbVersion)
+      _ <- IOTasks.downloadCLDR(coreZip, log, resourcesManaged, cldrVersion)
       // Use it to detect if files have been already generated
       f1 <- IOTasks.copyProvider(log, sourceManaged, "calendar.scala", "locales/cldr")
       f2 <- IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")
