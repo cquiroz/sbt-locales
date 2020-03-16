@@ -1,5 +1,4 @@
 import sbt._
-import sbt.io.Using
 import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
 val scalaJSVersion =
@@ -43,7 +42,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
     scalaVersion := "2.12.10",
     description := "scala-java-locales cldrl api",
     crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.1"),
-    libraryDependencies += "org.scalameta" %%% "munit" % "0.5.2",
+    libraryDependencies += "org.scalameta" %%% "munit" % "0.5.2" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
   )
