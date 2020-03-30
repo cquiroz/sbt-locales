@@ -1,12 +1,10 @@
 package locales
 
-import better.files._
-import better.files.Dsl._
 import java.io.InputStream
 import java.io.{ File => JFile }
 import java.net.URL
 import cats.effect.IO
-import sbt.Logger
+import sbt._
 import sbt.io.{ IO => SbtIO }
 
 object IOTasks {
@@ -16,7 +14,7 @@ object IOTasks {
     resourcesDir: JFile,
     cldrVersion:  CLDRVersion
   ): IO[Unit] = {
-    val localesDir = resourcesDir.toScala / "locales"
+    val localesDir = resourcesDir / "locales"
     val zipFile    = localesDir / coreZip.getName
     if (!zipFile.exists) {
       val url =
@@ -28,8 +26,8 @@ object IOTasks {
         )
         _ <- IO(log.info(s"downloading from $url"))
         _ <- IO(log.info(s"to file $coreZip"))
-        _ <- IO(mkdirs(localesDir))
-        _ <- IO(SbtIO.unzipURL(new URL(url), localesDir.toJava))
+        _ <- IO(localesDir.mkdirs)
+        _ <- IO(SbtIO.unzipURL(new URL(url), localesDir))
         _ <- IO(log.info(s"CLDR files expanded on $localesDir"))
       } yield ()
     } else {
@@ -52,7 +50,7 @@ object IOTasks {
     )
 
   def providerFile(base: JFile, name: String): IO[File] = IO {
-    val destinationPath = base.toScala
+    val destinationPath = base
     destinationPath / name
   }
 
@@ -60,12 +58,12 @@ object IOTasks {
     val pathSeparator       = JFile.separator
     val packagePath         = packageDir.replaceAll("\\.", pathSeparator)
     val stream: InputStream = getClass.getResourceAsStream("/" + name)
-    val destinationPath     = base.toScala / packagePath
-    mkdirs(destinationPath)
+    val destinationPath     = base / packagePath
+    destinationPath.mkdirs()
     val destinationFile = destinationPath / name
-    rm(destinationFile)
+    SbtIO.delete(destinationFile)
     log.info(s"Copy $name to $destinationFile")
-    SbtIO.transfer(stream, destinationFile.toJava)
-    destinationFile.toJava
+    SbtIO.transfer(stream, destinationFile)
+    destinationFile
   }
 }
