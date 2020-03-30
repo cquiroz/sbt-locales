@@ -2,8 +2,8 @@ package locales
 
 import cats.implicits._
 
-sealed trait CLDRVersion {
-  val id: String
+sealed trait CLDRVersion extends Product with Serializable {
+  def id: String
 }
 
 object CLDRVersion {
