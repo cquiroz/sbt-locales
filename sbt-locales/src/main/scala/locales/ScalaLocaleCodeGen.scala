@@ -94,7 +94,7 @@ object ScalaLocaleCodeGen {
       EraSymbols(List(bc, ad).flatten)
     }).headOption
 
-    if (List(months, weekdays, amPm, eras).exists(_.isDefined)) {
+    if (List(months, weekdays, amPm, eras).exists(_.isDefined))
       Some(
         CalendarSymbols(
           months.getOrElse(MonthSymbols.Zero).months,
@@ -105,47 +105,42 @@ object ScalaLocaleCodeGen {
           eras.getOrElse(EraSymbols.Zero).eras
         )
       )
-    } else {
+    else
       None
-    }
   }
 
   def readCalendarPatterns(xml: Node): Option[CalendarPatterns] = {
     val formatIndex: Map[String, Int] =
       Map(
-        "full" -> 0,
-        "long" -> 1,
+        "full"   -> 0,
+        "long"   -> 1,
         "medium" -> 2,
-        "short" -> 3
+        "short"  -> 3
         // val DEFAULT: Int = 2
       )
     def readPatterns(n: Node, sub: String, formatType: String): List[(Int, String)] =
       for {
         ft <- (n \ formatType).toList
         p  <- ft \ sub \ "pattern"
-        v = (p \ "@alt").text
-        t = (ft \ "@type").text
+        v   = (p \ "@alt").text
+        t   = (ft \ "@type").text
         if v != "variant"
       } yield formatIndex.getOrElse(t, sys.error(s"Uknown format $t")) -> p.text
 
-    val datePatterns = (for {
+    val datePatterns                  = (for {
       df <- xml \\ "dateFormats"
-    } yield {
-      readPatterns(df, "dateFormat", "dateFormatLength")
-    }).headOption.foldMap(_.toList).toMap
+    } yield readPatterns(df, "dateFormat", "dateFormatLength")).headOption.foldMap(_.toList).toMap
 
     val timePatterns = (for {
       df <- xml \\ "timeFormats"
-    } yield {
-      readPatterns(df, "timeFormat", "timeFormatLength")
-    }).headOption.foldMap(_.toList).toMap
+    } yield readPatterns(df, "timeFormat", "timeFormatLength")).headOption.foldMap(_.toList).toMap
 
     Some(CalendarPatterns(datePatterns, timePatterns))
   }
 
   // Pass in currency types into this, so we can augment the CurrencyData to include the master code list
-  def parseCurrencyData(xml: Node, currencyTypes: List[CurrencyType]): CurrencyData = {
-    def toOptionInt(node: NodeSeq): Option[Int] =
+  def parseCurrencyData(xml:    Node, currencyTypes: List[CurrencyType]): CurrencyData = {
+    def toOptionInt(node:  NodeSeq): Option[Int]    =
       if (node.nonEmpty && node.text.trim.nonEmpty) Some(node.text.trim.toInt) else None
 
     // TODO: After we have better simpledateformat/parsing support, parse it to a Date rather than keeping it as a string
@@ -160,9 +155,7 @@ object ScalaLocaleCodeGen {
     // Lookup the currencyCode => numericCode mappings first so we can augment the fractions info
     val numericCodes = for {
       codes <- xml \ "codeMappings" \\ "currencyCodes"
-    } yield {
-      CurrencyNumericCode((codes \ "@type").text.toUpperCase, (codes \ "@numeric").text.toInt)
-    }
+    } yield CurrencyNumericCode((codes \ "@type").text.toUpperCase, (codes \ "@numeric").text.toInt)
 
     val fractions = for {
       info <- xml \ "currencyData" \ "fractions" \\ "info"
@@ -197,15 +190,15 @@ object ScalaLocaleCodeGen {
       .map {
         case (countryCode: String, currencies: List[(String, CurrencyDataRegionCurrency)]) =>
           CurrencyDataRegion(countryCode, currencies.map(_._2))
-        case _ => ???
+        case _                                                                             => ???
       }
       .toSeq
 
     CurrencyData(
       currencyTypes = currencyTypes,
-      fractions     = fractions,
-      regions       = regions,
-      numericCodes  = numericCodes
+      fractions = fractions,
+      regions = regions,
+      numericCodes = numericCodes
     )
   }
 
@@ -214,27 +207,27 @@ object ScalaLocaleCodeGen {
       keys         <- (xml \ "keyword" \ """key""").toList
       currencyKeys <- keys.filter(n => (n \ "@name").text == "cu")
       currencyType <- currencyKeys \\ "type"
-    } yield {
-      CurrencyType((currencyType \ "@name").text.toUpperCase, (currencyType \ "@description").text)
-    }
+    } yield CurrencyType((currencyType \ "@name").text.toUpperCase,
+                         (currencyType \ "@description").text
+    )
 
   /**
     * Parse the xml into an XMLLDML object
     */
   def constructLDMLDescriptor(
-    f:       File,
-    xml:     Elem,
-    latn:    NumberingSystem,
-    ns:      Map[String, NumberingSystem],
-    filters: Filters
+    f:                        File,
+    xml:                      Elem,
+    latn:                     NumberingSystem,
+    ns:                       Map[String, NumberingSystem],
+    filters:                  Filters
   ): XMLLDML = {
     // Parse locale components
-    val language = (xml \ "identity" \ "language" \ "@type").text
+    val language  = (xml \ "identity" \ "language" \ "@type").text
     val territory = Option((xml \ "identity" \ "territory" \ "@type").text)
       .filter(_.nonEmpty)
-    val variant = Option((xml \ "identity" \ "variant" \ "@type").text)
+    val variant   = Option((xml \ "identity" \ "variant" \ "@type").text)
       .filter(_.nonEmpty)
-    val script = Option((xml \ "identity" \ "script" \ "@type").text)
+    val script    = Option((xml \ "identity" \ "script" \ "@type").text)
       .filter(_.nonEmpty)
 
     val gregorian = for {
@@ -296,7 +289,7 @@ object ScalaLocaleCodeGen {
       .map(_._2)
 
     // Find out the default numeric system
-    val defaultNS = Option((xml \ "numbers" \ "defaultNumberingSystem").text)
+    val defaultNS        = Option((xml \ "numbers" \ "defaultNumberingSystem").text)
       .filter(_.nonEmpty)
       .filter(ns.contains)
     def optionalString(n: NodeSeq): Option[String] = if (n.isEmpty) None else Some(n.text)
@@ -314,8 +307,8 @@ object ScalaLocaleCodeGen {
       // By default, number symbols without a specific numberSystem attribute
       // are assumed to be used for the "latn" numbering system, which uses
       // western (ASCII) digits
-      val nsAttr = Option((s \ "@numberSystem").text).filter(_.nonEmpty)
-      val sns    = nsAttr.flatMap(ns.get).getOrElse(latn)
+      val nsAttr    = Option((s \ "@numberSystem").text).filter(_.nonEmpty)
+      val sns       = nsAttr.flatMap(ns.get).getOrElse(latn)
       // TODO process aliases
       val nsSymbols = s.collect {
         case s @ <symbols>{_*}</symbols> if (s \ "alias").isEmpty =>
@@ -330,7 +323,7 @@ object ScalaLocaleCodeGen {
           val infiniteSign  = optionalString(s \ "infinity")
           val nan           = optionalString(s \ "nan")
           val exp           = optionalString(s \ "exponential")
-          val sym = NumberSymbols(
+          val sym           = NumberSymbols(
             sns,
             None,
             decimal,
@@ -346,7 +339,7 @@ object ScalaLocaleCodeGen {
           )
           sns -> sym
 
-        case <symbols>{_*}</symbols> =>
+        case <symbols>{_*}</symbols>                              =>
           // We take advantage that all aliases on CLDR are to latn
           sns -> NumberSymbols.alias(sns, latn)
       }
@@ -360,7 +353,7 @@ object ScalaLocaleCodeGen {
       }
       .map { c =>
         val currencyCode = (c \ "@type").text
-        val symbols = (c \\ "symbol").map { s =>
+        val symbols      = (c \\ "symbol").map { s =>
           CurrencySymbol(s.text, optionalString(s \ "@alt"))
         }
         val displayNames = (c \\ "displayName").map { n =>
@@ -444,7 +437,7 @@ object ScalaLocaleCodeGen {
     }
   }
 
-  def readCalendars(data: File): List[Calendar] = {
+  def readCalendars(data:    File): List[Calendar] = {
     // Parse the numeric systems
     val calendarsSupplementalData = data.toPath
       .resolve("common")
@@ -455,7 +448,7 @@ object ScalaLocaleCodeGen {
   }
 
   // Let's augment the "CurrencyData" in supplemental data with the master bcp47 type list
-  def readCurrencyData(data: File): CurrencyData = {
+  def readCurrencyData(data: File): CurrencyData   = {
     val currencySupplementalData = data.toPath
       .resolve("common")
       .resolve("supplemental")
@@ -527,7 +520,7 @@ object ScalaLocaleCodeGen {
     for {
       f <- files.map(k => k.toFile)
       if filters.localesFilter.filter(f.getName.replaceAll("\\.xml$", ""))
-      r = new InputStreamReader(new FileInputStream(f), "UTF-8")
+      r  = new InputStreamReader(new FileInputStream(f), "UTF-8")
     } yield constructLDMLDescriptor(
       f,
       XML.withSAXParser(parser).load(r),
@@ -553,9 +546,9 @@ object ScalaLocaleCodeGen {
   def parseTerritoryCodes(xml: Node): Map[String, String] =
     (for {
       territoryCodes <- xml \ "codeMappings" \ "territoryCodes"
-      alpha2 = (territoryCodes \ "@type").text
-      alpha3 = Option((territoryCodes \ "@alpha3").text).filter(_.nonEmpty)
-      entry  = alpha3.map(alpha2 -> _)
+      alpha2          = (territoryCodes \ "@type").text
+      alpha3          = Option((territoryCodes \ "@alpha3").text).filter(_.nonEmpty)
+      entry           = alpha3.map(alpha2 -> _)
     } yield entry).flatten.toMap
 
   def readIso3LanguageCodes(in: InputStream): Map[String, String] =
@@ -566,7 +559,7 @@ object ScalaLocaleCodeGen {
         line.split('|') match {
           case Array(bib, ter, alpha2, _, _) if alpha2.nonEmpty =>
             if (ter.nonEmpty) Some(alpha2 -> ter) else Some(alpha2 -> bib)
-          case _ => None
+          case _                                                => None
         }
       }
       .toMap
@@ -592,12 +585,12 @@ object ScalaLocaleCodeGen {
       .distinct
       .filter(_.length == 2)
       .sorted
-    val isoLanguages = clazzes
+    val isoLanguages    = clazzes
       .map(_.locale.language)
       .distinct
       .filter(_.length == 2)
       .sorted
-    val scripts = clazzes.flatMap(_.locale.script).distinct.sorted
+    val scripts         = clazzes.flatMap(_.locale.script).distinct.sorted
     // Generate metadata source code
     writeGeneratedTree(
       base,
@@ -634,17 +627,17 @@ object ScalaLocaleCodeGen {
     val numericSystemsMap: Map[String, NumberingSystem] =
       numericSystems.map(n => n.id -> n)(breakOut)
     // latn NS must exist, break if not found
-    val latnNS = numericSystemsMap("latn")
+    val latnNS                                          = numericSystemsMap("latn")
 
     val ldmls = buildLDMLDescriptors(data, numericSystemsMap, latnNS, filters)
 
-    val territoryCodes = readTerritoryCodes(data)
+    val territoryCodes    = readTerritoryCodes(data)
     val iso3LanguageCodes = readIso3LanguageCodes(
       this.getClass.getResourceAsStream("/ISO-639-2_utf-8.2019-05-29.txt")
     )
-    val f3            = generateMetadataFile(base, ldmls, territoryCodes, iso3LanguageCodes, filters)
-    val parentLocales = readParentLocales(data)
-    val f4            = generateLocalesFile(base, ldmls, parentLocales, filters.nsFilter.filter)
+    val f3                = generateMetadataFile(base, ldmls, territoryCodes, iso3LanguageCodes, filters)
+    val parentLocales     = readParentLocales(data)
+    val f4                = generateLocalesFile(base, ldmls, parentLocales, filters.nsFilter.filter)
 
     val currencyData = readCurrencyData(data)
     val f5           = generateCurrencyDataFile(base, currencyData, filters)

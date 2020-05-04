@@ -44,7 +44,7 @@ object DecimalFormatUtil {
     PatternCharExponent
   )
 
-  private val digitPatternChars = List(PatternCharZeroDigit, PatternCharDigit)
+  private val digitPatternChars         = List(PatternCharZeroDigit, PatternCharDigit)
   private val digitAndGroupPatternChars =
     List(PatternCharZeroDigit, PatternCharDigit, PatternCharGroupingSeparator)
 
@@ -75,45 +75,39 @@ object DecimalFormatUtil {
       (c, i) <- pattern.zipWithIndex.toList
     } {
       val inPatternChar = numberPatternChars.contains(c)
-      if (skipCount == 0) {
+      if (skipCount == 0)
         if (c == quoteChar) {
           val nextIdx = pattern.indexOf(quoteChar.toInt, i + 1)
           if (nextIdx >= 0) {
-            val next = if (nextIdx == i + 1) {
-              "'"
-            } else {
-              pattern.substring(i + 1, nextIdx)
-            }
-            if (!prefixReady) {
+            val next =
+              if (nextIdx == i + 1)
+                "'"
+              else
+                pattern.substring(i + 1, nextIdx)
+            if (!prefixReady)
               prefix ++= next
-            } else if (!bodyReady) {
+            else if (!bodyReady) {
               bodyReady = true
               suffix ++= next
-            } else {
+            } else
               suffix ++= next
-            }
             skipCount = nextIdx - i
-          } else {
+          } else
             throw new RuntimeException()
-          }
         } else {
-          if (!prefixReady && !inPatternChar) {
+          if (!prefixReady && !inPatternChar)
             prefix += c
-          } else if (!prefixReady && inPatternChar) {
+          else if (!prefixReady && inPatternChar)
             prefixReady = true
-          }
-          if (prefixReady && inPatternChar) {
+          if (prefixReady && inPatternChar)
             body += c
-          } else if (prefixReady && !inPatternChar) {
+          else if (prefixReady && !inPatternChar)
             bodyReady = true
-          }
-          if (bodyReady && !inPatternChar) {
+          if (bodyReady && !inPatternChar)
             suffix += c
-          }
         }
-      } else {
+      else
         skipCount = skipCount - 1
-      }
     }
 
     PatternParts(prefix.toString(), body.toString, suffix.toString)
@@ -129,11 +123,12 @@ object DecimalFormatUtil {
       case c                    => c.toString
     }.mkString
 
-  def toDecimalPatterns(pattern: String): DecimalPatterns = pattern.split(';').toList match {
-    case Nil         => DecimalPatterns(PatternParts(""), None)
-    case p :: Nil    => DecimalPatterns(decimalPatternSplit(p), None)
-    case p :: n :: _ => DecimalPatterns(decimalPatternSplit(p), Some(decimalPatternSplit(n)))
-  }
+  def toDecimalPatterns(pattern: String): DecimalPatterns =
+    pattern.split(';').toList match {
+      case Nil         => DecimalPatterns(PatternParts(""), None)
+      case p :: Nil    => DecimalPatterns(decimalPatternSplit(p), None)
+      case p :: n :: _ => DecimalPatterns(decimalPatternSplit(p), Some(decimalPatternSplit(n)))
+    }
 
   def groupingCount(pattern: String): Int = {
     val pat                = pattern.filterNot(c => c == PatternCharPercent || !allPatternChars.contains(c))
@@ -156,9 +151,8 @@ object DecimalFormatUtil {
   implicit class RichString(val s: String) extends AnyVal {
     def toBlankOption: Option[String] =
       if (s == null) None
-      else {
+      else
         s.find(!Character.isWhitespace(_)).map(_ => s)
-      }
   }
 
   // This probably isn't perfect if there is a malformed pattern ("#0#0.0#0E#0") but should be good enough
@@ -171,7 +165,7 @@ object DecimalFormatUtil {
         // to count the zeroes directly before the "."
         val haystack: String =
           if (trailingCount) pattern.substring(idx + 1) else pattern.substring(0, idx).reverse
-        val min: Int = haystack
+        val min: Int         = haystack
           .filterNot(_ == PatternCharGroupingSeparator)
           .takeWhile(_ == PatternCharZeroDigit)
           .size
@@ -180,7 +174,7 @@ object DecimalFormatUtil {
 
   private def countMaximumDigits(pattern: String, c: Char): Option[Int] =
     pattern.indexOf(c.toInt) match {
-      case -1 => None
+      case -1  => None
       case idx =>
         Some(
           pattern
@@ -191,7 +185,7 @@ object DecimalFormatUtil {
     }
 
   // Expects a non-localized pattern, we should have a regex that enforces a good pattern
-  def toParsedPattern(pattern: String): ParsedPattern = {
+  def toParsedPattern(pattern:            String): ParsedPattern = {
     val patterns = toDecimalPatterns(pattern)
 
     val prefixAndSuffix: String = patterns.positive.suffix + patterns.positive.suffix
@@ -211,7 +205,7 @@ object DecimalFormatUtil {
       countMinimum(patterns.positive.pattern, PatternCharDecimalSeparator, true)
 
     // A little special since only applies to patterns with an exponent
-    val maxIntegerDigits: Option[Int] = if (hasExponent) {
+    val maxIntegerDigits: Option[Int]  = if (hasExponent) {
       val decimalPosition: Int =
         patterns.positive.pattern.indexOf(PatternCharDecimalSeparator.toInt)
       assert(decimalPosition > 0, "Exponent pattern must have a decimal")
@@ -222,7 +216,7 @@ object DecimalFormatUtil {
     // JavaDoc: If the maximum number of integer digits is greater than their minimum number and greater than 1, it
     // forces the exponent to be a multiple of the maximum number of integer digits, and the minimum number of integer
     // digits to be interpreted as 1.
-    val minIntegerDigits: Option[Int] = {
+    val minIntegerDigits: Option[Int]  = {
       val count: Option[Int] =
         countMinimum(patterns.positive.pattern, PatternCharDecimalSeparator, false)
 
@@ -230,10 +224,10 @@ object DecimalFormatUtil {
         for {
           maxInt <- maxIntegerDigits
           minInt <- count
-          d = minInt
+          d       = minInt
           if hasExponent
           if maxInt > minInt && maxInt > 1
-        } yield (1)
+        } yield 1
 
       exponentMin
         .orElse(count)
@@ -253,13 +247,13 @@ object DecimalFormatUtil {
         if (patterns.negative.isEmpty) patterns.positive.prefix.toBlankOption else None,
       defaultNegativeSuffix =
         if (patterns.negative.isEmpty) patterns.positive.suffix.toBlankOption else None,
-      multiplier            = if (hasPercent) 100 else if (hasMile) 1000 else 1,
-      groupingSize          = groupSize,
-      isGroupingUsed        = (groupSize > 0),
-      minimumIntegerDigits  = minIntegerDigits,
+      multiplier = if (hasPercent) 100 else if (hasMile) 1000 else 1,
+      groupingSize = groupSize,
+      isGroupingUsed = (groupSize > 0),
+      minimumIntegerDigits = minIntegerDigits,
       minimumFractionDigits = minFractionDigits,
       minimumExponentDigits = countMinimum(patterns.positive.pattern, PatternCharExponent, true),
-      maximumIntegerDigits  = maxIntegerDigits,
+      maximumIntegerDigits = maxIntegerDigits,
       maximumFractionDigits =
         countMaximumDigits(patterns.positive.pattern, PatternCharDecimalSeparator),
       maximumExponentDigits = countMaximumDigits(patterns.positive.pattern, PatternCharExponent)

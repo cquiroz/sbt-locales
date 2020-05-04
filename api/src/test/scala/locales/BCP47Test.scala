@@ -31,13 +31,16 @@ class BCP47Test extends munit.FunSuite {
     // Simple language subtag:
     // de (German)
     assertEquals(Option[BCP47Tag](LanguageTag("de", None, None, None, Nil, Nil, None)),
-                 BCP47.parseTag("de"))
+                 BCP47.parseTag("de")
+    )
     // fr (French)
     assertEquals(Option[BCP47Tag](LanguageTag("fr", None, None, None, Nil, Nil, None)),
-                 BCP47.parseTag("fr"))
+                 BCP47.parseTag("fr")
+    )
     // ja (Japanese)
     assertEquals(Option[BCP47Tag](LanguageTag("ja", None, None, None, Nil, Nil, None)),
-                 BCP47.parseTag("ja"))
+                 BCP47.parseTag("ja")
+    )
     // i-enochian (example of a grandfathered tag)
     assertEquals(Option[BCP47Tag](GrandfatheredTag("i-enochian")), BCP47.parseTag("i-enochian"))
   }
@@ -46,16 +49,20 @@ class BCP47Test extends munit.FunSuite {
     // Language subtag plus Script subtag:
     // zh-Hant (Chinese written using the Traditional Chinese script)
     assertEquals(Option[BCP47Tag](LanguageTag("zh", None, Some("Hant"), None, Nil, Nil, None)),
-                 BCP47.parseTag("zh-Hant"))
+                 BCP47.parseTag("zh-Hant")
+    )
     // zh-Hans (Chinese written using the Simplified Chinese script)
     assertEquals(Option[BCP47Tag](LanguageTag("zh", None, Some("Hans"), None, Nil, Nil, None)),
-                 BCP47.parseTag("zh-Hans"))
+                 BCP47.parseTag("zh-Hans")
+    )
     // sr-Cyrl (Serbian written using the Cyrillic script)
     assertEquals(Option[BCP47Tag](LanguageTag("sr", None, Some("Cyrl"), None, Nil, Nil, None)),
-                 BCP47.parseTag("sr-Cyrl"))
+                 BCP47.parseTag("sr-Cyrl")
+    )
     // sr-Latn (Serbian written using the Latin script)
     assertEquals(Option[BCP47Tag](LanguageTag("sr", None, Some("Latn"), None, Nil, Nil, None)),
-                 BCP47.parseTag("sr-Latn"))
+                 BCP47.parseTag("sr-Latn")
+    )
   }
 
   test("test_languages_extended_samples") {
@@ -72,10 +79,12 @@ class BCP47Test extends munit.FunSuite {
     )
     // zh-yue-HK (Chinese, Cantonese, as used in Hong Kong SAR)
     assertEquals(Option[BCP47Tag](LanguageTag("zh", Some("yue"), None, Some("HK"), Nil, Nil, None)),
-                 BCP47.parseTag("zh-yue-HK"))
+                 BCP47.parseTag("zh-yue-HK")
+    )
     // yue-HK (Cantonese Chinese, as used in Hong Kong SAR)
     assertEquals(Option[BCP47Tag](LanguageTag("yue", None, None, Some("HK"), Nil, Nil, None)),
-                 BCP47.parseTag("yue-HK"))
+                 BCP47.parseTag("yue-HK")
+    )
   }
 
   test("test_language_script_region_samples") {
@@ -96,7 +105,8 @@ class BCP47Test extends munit.FunSuite {
     // Language-Variant:
     // sl-rozaj (Resian dialect of Slovenian)
     assertEquals(Option[BCP47Tag](LanguageTag("sl", None, None, None, List("rozaj"), Nil, None)),
-                 BCP47.parseTag("sl-rozaj"))
+                 BCP47.parseTag("sl-rozaj")
+    )
     // sl-rozaj-biske (San Giorgio dialect of Resian dialect of Slovenian)
     assertEquals(
       Option[BCP47Tag](LanguageTag("sl", None, None, None, List("rozaj", "biske"), Nil, None)),
@@ -104,7 +114,8 @@ class BCP47Test extends munit.FunSuite {
     )
     // sl-nedis (Nadiza dialect of Slovenian)
     assertEquals(Option[BCP47Tag](LanguageTag("sl", None, None, None, List("nedis"), Nil, None)),
-                 BCP47.parseTag("sl-nedis"))
+                 BCP47.parseTag("sl-nedis")
+    )
   }
 
   test("test_language_region_variant_samples") {
@@ -136,14 +147,17 @@ class BCP47Test extends munit.FunSuite {
     // Language-Region:
     // de-DE (German for Germany)
     assertEquals(Option[BCP47Tag](LanguageTag("de", None, None, Some("DE"), Nil, Nil, None)),
-                 BCP47.parseTag("de-DE"))
+                 BCP47.parseTag("de-DE")
+    )
     // en-US (English as used in the United States)
     assertEquals(Option[BCP47Tag](LanguageTag("en", None, None, Some("US"), Nil, Nil, None)),
-                 BCP47.parseTag("en-US"))
+                 BCP47.parseTag("en-US")
+    )
     // es-419 (Spanish appropriate for the Latin America and Caribbean
     // region using the UN region code)
     assertEquals(Option[BCP47Tag](LanguageTag("es", None, None, Some("419"), Nil, Nil, None)),
-                 BCP47.parseTag("es-419"))
+                 BCP47.parseTag("es-419")
+    )
   }
 
   test("test_private_use_samples") {
@@ -184,7 +198,8 @@ class BCP47Test extends munit.FunSuite {
     assertEquals(Option[BCP47Tag](
                    LanguageTag("en", None, None, None, Nil, List("a-myext", "b-another"), None)
                  ),
-                 BCP47.parseTag("en-a-myext-b-another"))
+                 BCP47.parseTag("en-a-myext-b-another")
+    )
   }
 
   test("test_invalid_samples") {

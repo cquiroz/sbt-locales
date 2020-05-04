@@ -57,21 +57,20 @@ case class LDML(
   def languageTag: String = toLocale.toLanguageTag
 
   def toLocale: Locale =
-    if (locale.language == "root") {
+    if (locale.language == "root")
       new Locale.Builder()
         .setLanguage("")
         .setRegion(locale.territory.getOrElse(""))
         .setScript(locale.script.getOrElse(""))
         .setVariant(locale.variant.getOrElse(""))
         .build
-    } else {
+    else
       new Locale.Builder()
         .setLanguage(locale.language)
         .setRegion(locale.territory.getOrElse(""))
         .setScript(locale.script.getOrElse(""))
         .setVariant(locale.variant.getOrElse(""))
         .build
-    }
 }
 
 final case class XMLLDML(

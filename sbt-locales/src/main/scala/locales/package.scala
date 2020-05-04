@@ -6,7 +6,7 @@ sealed trait CLDRVersion extends Product with Serializable {
   def id: String
 }
 
-object CLDRVersion {
+object CLDRVersion           {
   case object LatestVersion extends CLDRVersion {
     val id: String = "latest"
   }
@@ -24,7 +24,7 @@ object NumberingSystemFilter {
   case object Minimal extends NumberingSystemFilter {
     def filter: String => Boolean = _ === "latn"
   }
-  case object All extends NumberingSystemFilter {
+  case object All     extends NumberingSystemFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends NumberingSystemFilter {
@@ -46,7 +46,7 @@ object CalendarFilter {
   case object Minimal extends CalendarFilter {
     def filter: String => Boolean = _ === "gregorian"
   }
-  case object All extends CalendarFilter {
+  case object All     extends CalendarFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends CalendarFilter {
@@ -68,7 +68,7 @@ object LocalesFilter {
   case object Minimal extends LocalesFilter {
     def filter: String => Boolean = l => l === "root" || l === "en"
   }
-  case object All extends LocalesFilter {
+  case object All     extends LocalesFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends LocalesFilter {
@@ -91,7 +91,7 @@ object CurrencyFilter {
   case object None extends CurrencyFilter {
     def filter: String => Boolean = _ => false
   }
-  case object All extends CurrencyFilter {
+  case object All  extends CurrencyFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends CurrencyFilter {

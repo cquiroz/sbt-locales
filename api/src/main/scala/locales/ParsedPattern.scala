@@ -7,10 +7,10 @@ case class ParsedPattern(
   val negativeSuffix:        Option[String] = None,
   val defaultNegativePrefix: Option[String] = None,
   val defaultNegativeSuffix: Option[String] = None,
-  val multiplier:            Int            = 1, // Might need to test if the multiplier needs to be negative vs positive specific
-
-  val groupingSize:          Int         = 0,
-  val isGroupingUsed:        Boolean     = false,
+  val multiplier:            Int =
+    1, // Might need to test if the multiplier needs to be negative vs positive specific
+  val groupingSize:          Int = 0,
+  val isGroupingUsed:        Boolean = false,
   val minimumIntegerDigits:  Option[Int] = None,
   val minimumFractionDigits: Option[Int] = None,
   val minimumExponentDigits: Option[Int] = None,

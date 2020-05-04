@@ -2,7 +2,7 @@ package locales.cldr
 
 // http://www.unicode.org/reports/tr35/tr35-numbers.html#Currencies
 final case class CurrencyDisplayName(name: String, count: Option[String])
-final case class CurrencySymbol(symbol:    String, alt:   Option[String])
+final case class CurrencySymbol(symbol: String, alt: Option[String])
 
 final case class NumberCurrency(
   currencyCode: String,

@@ -3,18 +3,18 @@ package locales
 object BCP47 {
   // The regular experssions are carefully curated to work both in
   // JVM and JS(rhino/node), be careful when editing them
-  lazy val extlang    = "(?:-[A-Za-z]{3}){0,3}"
-  lazy val language   = s"([A-Za-z]{2,3})($extlang)?|[A-Za-z]{4}|[A-Za-z]{5,8}"
-  lazy val script     = "[A-Za-z]{4}"
-  lazy val region     = "([A-Za-z]{2}|[0-9]{3})"
-  lazy val variant    = "([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3})"
-  lazy val variantR   = s"($variant)".r
-  lazy val singleton  = "[0-9A-WY-Za-wy-z]"
-  lazy val extension  = s"$singleton(?:-[A-Za-z0-9]{2,8})+"
-  lazy val privateUse = "x(?:-[A-Za-z0-9]{1,8})+"
-  lazy val langtag =
+  lazy val extlang       = "(?:-[A-Za-z]{3}){0,3}"
+  lazy val language      = s"([A-Za-z]{2,3})($extlang)?|[A-Za-z]{4}|[A-Za-z]{5,8}"
+  lazy val script        = "[A-Za-z]{4}"
+  lazy val region        = "([A-Za-z]{2}|[0-9]{3})"
+  lazy val variant       = "([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3})"
+  lazy val variantR      = s"($variant)".r
+  lazy val singleton     = "[0-9A-WY-Za-wy-z]"
+  lazy val extension     = s"$singleton(?:-[A-Za-z0-9]{2,8})+"
+  lazy val privateUse    = "x(?:-[A-Za-z0-9]{1,8})+"
+  lazy val langtag       =
     s"^(?:$language)(-$script)?(?:-$region)?((?:-$variant)*)((?:-$extension)*)(-$privateUse)?$$"
-  lazy val regular = List("art-lojban",
+  lazy val regular       = List("art-lojban",
                           "cel-gaulish",
                           "no-bok",
                           "no-nyn",
@@ -22,8 +22,9 @@ object BCP47 {
                           "zh-hakka",
                           "zh-min-nan",
                           "zh-min",
-                          "zh-xiang").mkString("|")
-  lazy val irregular =
+                          "zh-xiang"
+  ).mkString("|")
+  lazy val irregular     =
     List(
       "en-GB-oed",
       "i-ami",
@@ -58,21 +59,21 @@ object BCP47 {
     privateUse:      Option[String] = None
   ) extends BCP47Tag
   case class GrandfatheredTag(language: String) extends BCP47Tag
-  case class PrivateUseTag(privateUse:  String) extends BCP47Tag
+  case class PrivateUseTag(privateUse: String) extends BCP47Tag
 
   // Remove the initial dash
   @inline private def rd(l: String): Option[String] =
     Option(l).filter(_.nonEmpty).map(_.substring(1))
 
   // Convert to list removing dashes
-  @inline private def rdl(l: String): List[String] =
+  @inline private def rdl(l: String): List[String]   =
     Option(l)
       .filter(_.nonEmpty)
       .map(_.substring(1).split("-").toList)
       .getOrElse(Nil)
 
   // Convert to list of extensions
-  @inline private def rde(l: String): List[String] =
+  @inline private def rde(l: String): List[String]   =
     Option(l)
       .filter(_.nonEmpty)
       .map(
