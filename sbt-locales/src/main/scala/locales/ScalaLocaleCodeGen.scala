@@ -139,8 +139,8 @@ object ScalaLocaleCodeGen {
   }
 
   // Pass in currency types into this, so we can augment the CurrencyData to include the master code list
-  def parseCurrencyData(xml:    Node, currencyTypes: List[CurrencyType]): CurrencyData = {
-    def toOptionInt(node:  NodeSeq): Option[Int]    =
+  def parseCurrencyData(xml: Node, currencyTypes: List[CurrencyType]): CurrencyData = {
+    def toOptionInt(node: NodeSeq): Option[Int] =
       if (node.nonEmpty && node.text.trim.nonEmpty) Some(node.text.trim.toInt) else None
 
     // TODO: After we have better simpledateformat/parsing support, parse it to a Date rather than keeping it as a string
@@ -215,11 +215,11 @@ object ScalaLocaleCodeGen {
     * Parse the xml into an XMLLDML object
     */
   def constructLDMLDescriptor(
-    f:                        File,
-    xml:                      Elem,
-    latn:                     NumberingSystem,
-    ns:                       Map[String, NumberingSystem],
-    filters:                  Filters
+    f:       File,
+    xml:     Elem,
+    latn:    NumberingSystem,
+    ns:      Map[String, NumberingSystem],
+    filters: Filters
   ): XMLLDML = {
     // Parse locale components
     val language  = (xml \ "identity" \ "language" \ "@type").text
@@ -289,7 +289,7 @@ object ScalaLocaleCodeGen {
       .map(_._2)
 
     // Find out the default numeric system
-    val defaultNS        = Option((xml \ "numbers" \ "defaultNumberingSystem").text)
+    val defaultNS = Option((xml \ "numbers" \ "defaultNumberingSystem").text)
       .filter(_.nonEmpty)
       .filter(ns.contains)
     def optionalString(n: NodeSeq): Option[String] = if (n.isEmpty) None else Some(n.text)
@@ -437,7 +437,7 @@ object ScalaLocaleCodeGen {
     }
   }
 
-  def readCalendars(data:    File): List[Calendar] = {
+  def readCalendars(data: File): List[Calendar] = {
     // Parse the numeric systems
     val calendarsSupplementalData = data.toPath
       .resolve("common")
@@ -448,7 +448,7 @@ object ScalaLocaleCodeGen {
   }
 
   // Let's augment the "CurrencyData" in supplemental data with the master bcp47 type list
-  def readCurrencyData(data: File): CurrencyData   = {
+  def readCurrencyData(data: File): CurrencyData = {
     val currencySupplementalData = data.toPath
       .resolve("common")
       .resolve("supplemental")

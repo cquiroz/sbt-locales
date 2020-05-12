@@ -66,14 +66,14 @@ object BCP47 {
     Option(l).filter(_.nonEmpty).map(_.substring(1))
 
   // Convert to list removing dashes
-  @inline private def rdl(l: String): List[String]   =
+  @inline private def rdl(l: String): List[String] =
     Option(l)
       .filter(_.nonEmpty)
       .map(_.substring(1).split("-").toList)
       .getOrElse(Nil)
 
   // Convert to list of extensions
-  @inline private def rde(l: String): List[String]   =
+  @inline private def rde(l: String): List[String] =
     Option(l)
       .filter(_.nonEmpty)
       .map(
@@ -107,13 +107,13 @@ object BCP47 {
         //val lang = Option(el).map(l.replace(rdl, "")).getOrElse(l)
         Some(LanguageTag(l, rd(el), rd(s), Option(r), rdl(v), rde(x), puc(p)))
 
-      case langtagRegex(g, _, _, _, _, _, _, _, _, _) if g != null =>
+      case langtagRegex(g, _, _, _, _, _, _, _, _, _) if g != null  =>
         Some(GrandfatheredTag(g))
 
-      case langtagRegex(_, _, _, _, _, _, _, _, _, p) if p != null =>
+      case langtagRegex(_, _, _, _, _, _, _, _, _, p) if p != null  =>
         Some(PrivateUseTag(p.replaceFirst("x-", "")))
 
-      case _ =>
+      case _                                                        =>
         None
     }
 }

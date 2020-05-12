@@ -185,7 +185,7 @@ object DecimalFormatUtil {
     }
 
   // Expects a non-localized pattern, we should have a regex that enforces a good pattern
-  def toParsedPattern(pattern:            String): ParsedPattern = {
+  def toParsedPattern(pattern: String): ParsedPattern = {
     val patterns = toDecimalPatterns(pattern)
 
     val prefixAndSuffix: String = patterns.positive.suffix + patterns.positive.suffix
@@ -205,7 +205,7 @@ object DecimalFormatUtil {
       countMinimum(patterns.positive.pattern, PatternCharDecimalSeparator, true)
 
     // A little special since only applies to patterns with an exponent
-    val maxIntegerDigits: Option[Int]  = if (hasExponent) {
+    val maxIntegerDigits: Option[Int] = if (hasExponent) {
       val decimalPosition: Int =
         patterns.positive.pattern.indexOf(PatternCharDecimalSeparator.toInt)
       assert(decimalPosition > 0, "Exponent pattern must have a decimal")
@@ -216,7 +216,7 @@ object DecimalFormatUtil {
     // JavaDoc: If the maximum number of integer digits is greater than their minimum number and greater than 1, it
     // forces the exponent to be a multiple of the maximum number of integer digits, and the minimum number of integer
     // digits to be interpreted as 1.
-    val minIntegerDigits: Option[Int]  = {
+    val minIntegerDigits: Option[Int] = {
       val count: Option[Int] =
         countMinimum(patterns.positive.pattern, PatternCharDecimalSeparator, false)
 

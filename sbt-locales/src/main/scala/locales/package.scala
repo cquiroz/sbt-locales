@@ -6,7 +6,7 @@ sealed trait CLDRVersion extends Product with Serializable {
   def id: String
 }
 
-object CLDRVersion           {
+object CLDRVersion {
   case object LatestVersion extends CLDRVersion {
     val id: String = "latest"
   }

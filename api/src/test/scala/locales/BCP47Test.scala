@@ -21,7 +21,7 @@ class BCP47Test extends munit.FunSuite {
         assertEquals("zh", lang)
         assertEquals(Option(t.replace("zh-", "")), extLang)
 
-      case _ => fail("Shouldn't happen")
+      case _                                                    => fail("Shouldn't happen")
     }
   }
 

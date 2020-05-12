@@ -230,7 +230,7 @@ object CodeGenerator {
     ).inPackage("locales.cldr.data")
   }
 
-  def calendars(c:         List[Calendar], filter: String => Boolean): Tree = {
+  def calendars(c: List[Calendar], filter: String => Boolean): Tree = {
     val ldmlNS    = getModule("Calendar")
     val calendars = c.filter(c => filter(c.id))
 
