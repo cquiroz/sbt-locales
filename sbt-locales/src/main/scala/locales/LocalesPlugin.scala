@@ -30,6 +30,7 @@ object LocalesPlugin extends AutoPlugin {
           val cacheLocation                                  = streams.value.cacheDirectory / s"cldr-locales"
           val log                                            = streams.value.log
           val coreZip                                        = cacheLocation / s"core-${cldrVersion.value.id}.zip"
+          val ucdZip                                         = cacheLocation / s"UCD.zip"
           val cachedActionFunction: Set[JFile] => Set[JFile] =
             FileFunction.cached(
               cacheLocation,
@@ -48,6 +49,7 @@ object LocalesPlugin extends AutoPlugin {
                 )
                 localesCodeGenImpl(
                   coreZip,
+                  ucdZip,
                   sourceManaged = (sourceManaged in Compile).value,
                   resourcesManaged = (resourceManaged in Compile).value,
                   filters,
@@ -79,6 +81,7 @@ object LocalesPlugin extends AutoPlugin {
 
   def localesCodeGenImpl(
     coreZip:          JFile,
+    ucdZip:           JFile,
     sourceManaged:    JFile,
     resourcesManaged: JFile,
     filters:          Filters,
@@ -87,6 +90,7 @@ object LocalesPlugin extends AutoPlugin {
   ): Set[JFile] =
     (for {
       _  <- IOTasks.downloadCLDR(coreZip, log, resourcesManaged, cldrVersion)
+      _  <- IOTasks.downloadUCD(ucdZip, log, resourcesManaged)
       // Use it to detect if files have been already generated
       f1 <- IOTasks.copyProvider(log, sourceManaged, "calendar.scala", "locales/cldr")
       f2 <- IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")

@@ -35,6 +35,32 @@ object IOTasks {
       IO(log.debug("cldr files already available"))
   }
 
+  // https://unicode.org/Public/UCD/latest/ucd/UCD.zip
+  def downloadUCD(
+    ucdZip:       JFile,
+    log:          Logger,
+    resourcesDir: JFile
+  ): IO[Unit] = {
+    val ucdDir  = resourcesDir / "ucd"
+    val zipFile = ucdDir / ucdZip.getName
+    if (!zipFile.exists) {
+      val url =
+        s"http://unicode.org/Public/UCD/latest/ucd/UCD.zip"
+      for {
+        _ <- IO(
+               log
+                 .info(s"UCD data missing. downloading latest version to $ucdDir...")
+             )
+        _ <- IO(log.info(s"downloading from $url"))
+        _ <- IO(log.info(s"to file $ucdZip"))
+        _ <- IO(ucdDir.mkdirs)
+        _ <- IO(SbtIO.unzipURL(new URL(url), ucdDir))
+        _ <- IO(log.info(s"UCD files expanded on $ucdDir"))
+      } yield ()
+    } else
+      IO(log.debug("ucd files already available"))
+  }
+
   def generateCLDR(
     base:    JFile,
     data:    JFile,
