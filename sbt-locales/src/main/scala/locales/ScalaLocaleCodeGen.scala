@@ -1,15 +1,16 @@
 package locales
 
 import cats.implicits._
-import java.io.{ File, FileInputStream, InputStream, InputStreamReader }
+import java.io.{File, FileInputStream, InputStream, InputStreamReader}
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.util.function.IntPredicate
 import javax.xml.parsers.SAXParserFactory
 import scala.collection.JavaConverters._
 import scala.collection.breakOut
-import scala.xml.{ XML, _ }
+import scala.xml.{XML, _}
 import locales.cldr._
+import locales.ucd.LanguageData
 
 object ScalaLocaleCodeGen {
   def writeGeneratedTree(base: File, file: String, tree: treehugger.forest.Tree): File = {
@@ -542,6 +543,20 @@ object ScalaLocaleCodeGen {
     val stdTree = CodeGenerator.buildClassTree(clazzes, names, parentLocales, nsFilter)
     writeGeneratedTree(base, "data", stdTree)
   }
+
+  def parseLanguageData(xml: Node): Seq[LanguageData] =
+    for {
+      languages <- xml \ "languageData" \ "language"
+      langCode                    = (languages \ "@type").text
+      scripts: Seq[String]        = (languages \ "@scripts").text.split(" ")
+      isSecondary: Boolean        = Option((languages \ "@alt").text).filter(_.nonEmpty).map{ s => require(s == "secondary"); true }.getOrElse(false)
+      territoryCodes: Seq[String] = Option((languages \ "@territories").text).filter(_.nonEmpty).map{ _.split(" ") } getOrElse Nil
+    } yield LanguageData(
+      language = langCode,
+      scripts: Seq[String],
+      territories = territoryCodes,
+      isSecondary = isSecondary
+    )
 
   def parseTerritoryCodes(xml: Node): Map[String, String] =
     (for {

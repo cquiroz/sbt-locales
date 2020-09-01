@@ -47,9 +47,10 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
   )
   .jvmSettings(
-    skip.in(publish) := scalaJSVersion.startsWith("1")
+    //skip.in(publish) := scalaJSVersion.startsWith("1")
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
+
 
 lazy val sbt_locales = project
   .in(file("sbt-locales"))
@@ -57,7 +58,7 @@ lazy val sbt_locales = project
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
-    skip in publish := scalaJSVersion.startsWith("1"),
+    //skip in publish := scalaJSVersion.startsWith("1"),
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
     scalaVersion := "2.12.11",
