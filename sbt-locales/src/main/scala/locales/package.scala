@@ -1,6 +1,6 @@
 package locales
 
-import cats.implicits._
+import cats.syntax.all._
 
 sealed trait CLDRVersion extends Product with Serializable {
   def id: String
