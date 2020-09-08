@@ -71,8 +71,8 @@ lazy val sbt_locales = project
     libraryDependencies ++= Seq(
       "com.eed3si9n" %% "gigahorse-okhttp" % "0.5.0",
       "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
-      "org.typelevel" %% "cats-core" % "2.2.0",
-      "org.typelevel" %% "cats-effect" % "2.1.4",
+      "org.typelevel" %% "cats-core" % "2.1.1",
+      "org.typelevel" %% "cats-effect" % "2.2.0",
       "com.eed3si9n" %% "treehugger" % "0.4.4"
     )
   )
