@@ -42,7 +42,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
     scalaVersion := "2.12.11",
     description := "scala-java-locales cldrl api",
     crossScalaVersions := Seq("2.11.12", "2.12.11", "2.13.2"),
-    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.12" % Test,
+    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.13" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
   )
