@@ -6,6 +6,8 @@ val scalaJSVersion =
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
+pluginCrossBuild / sbtVersion := "1.2.8"
+
 inThisBuild(
   List(
     organization := "io.github.cquiroz",
