@@ -2,7 +2,7 @@ import sbt._
 import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
 val scalaJSVersion =
-  Option(System.getenv("SCALAJS_VERSION")).getOrElse("1.2.0")
+  Option(System.getenv("SCALAJS_VERSION")).getOrElse("1.3.0")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
