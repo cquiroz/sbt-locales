@@ -40,6 +40,7 @@ The code generated will thus include only the minimal data
 # Example:
 
 ```scala
+  .enablePlugins(LocalesPlugin)
   .settings(
       localesFilter := LocalesFilter.Selection("en-US", "fi", "fi-FI"),
       nsFilter := NumberingSystemFilter.Minimal,
