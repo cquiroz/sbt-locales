@@ -1,9 +1,6 @@
 import sbt._
 import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
-val scalaJSVersion =
-  Option(System.getenv("SCALAJS_VERSION")).getOrElse("1.3.0")
-
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 pluginCrossBuild / sbtVersion := "1.2.8"
@@ -17,7 +14,8 @@ inThisBuild(
       Developer("cquiroz",
                 "Carlos Quiroz",
                 "carlos.m.quiroz@gmail.com",
-                url("https://github.com/cquiroz"))
+                url("https://github.com/cquiroz")
+      )
     ),
     scmInfo := Some(
       ScmInfo(
@@ -43,13 +41,11 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
     name := "cldr-api",
     scalaVersion := "2.12.11",
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", "2.12.11", "2.13.2"),
-    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.16" % Test,
+    crossScalaVersions := Seq("2.11.12", "2.12.11", "2.13.3", "3.0.0-M1"),
+    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.17" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
-    libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
-  )
-  .jvmSettings(
-    skip.in(publish) := scalaJSVersion.startsWith("1")
+    libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.0.0")
+      .withDottyCompat(scalaVersion.value)
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
@@ -59,7 +55,6 @@ lazy val sbt_locales = project
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
-    skip in publish := scalaJSVersion.startsWith("1"),
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
     scalaVersion := "2.12.11",
@@ -71,11 +66,11 @@ lazy val sbt_locales = project
     resources in Compile ++= (sources in (api.jvm, Compile)).value,
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
-      "com.eed3si9n" %% "gigahorse-okhttp" % "0.5.0",
-      "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
-      "org.typelevel" %% "cats-core" % "2.2.0",
-      "org.typelevel" %% "cats-effect" % "2.2.0",
-      "com.eed3si9n" %% "treehugger" % "0.4.4"
+      "com.eed3si9n"           %% "gigahorse-okhttp" % "0.5.0",
+      "org.scala-lang.modules" %% "scala-xml"        % "1.3.0",
+      "org.typelevel"          %% "cats-core"        % "2.2.0",
+      "org.typelevel"          %% "cats-effect"      % "2.2.0",
+      "com.eed3si9n"           %% "treehugger"       % "0.4.4"
     )
   )
   .dependsOn(api.jvm)
