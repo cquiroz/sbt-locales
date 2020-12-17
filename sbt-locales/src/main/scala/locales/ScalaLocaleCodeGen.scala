@@ -28,7 +28,7 @@ object ScalaLocaleCodeGen {
     path.toFile
   }
 
-  val currentRelease = CLDRVersion.LatestVersion.id
+  val currentRelease = CLDRVersion.LatestVersion
 
   val unicodeIgnorable = new IntPredicate {
     override def test(value: Int): Boolean = !Character.isIdentifierIgnorable(value)
