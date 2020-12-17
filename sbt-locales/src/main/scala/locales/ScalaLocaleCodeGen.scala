@@ -407,6 +407,7 @@ object ScalaLocaleCodeGen {
   def readNumberingSystems(data: File): List[NumberingSystem] = {
     // Parse the numeric systems
     val numberingSystemsFile = data.toPath
+      .resolve(s"cldr-${CLDRVersion.Version}")
       .resolve("common")
       .resolve("supplemental")
       .resolve("numberingSystems.xml")
@@ -440,6 +441,7 @@ object ScalaLocaleCodeGen {
   def readCalendars(data: File): List[Calendar] = {
     // Parse the numeric systems
     val calendarsSupplementalData = data.toPath
+      .resolve(s"cldr-${CLDRVersion.Version}")
       .resolve("common")
       .resolve("supplemental")
       .resolve("supplementalData.xml")
@@ -450,6 +452,7 @@ object ScalaLocaleCodeGen {
   // Let's augment the "CurrencyData" in supplemental data with the master bcp47 type list
   def readCurrencyData(data: File): CurrencyData = {
     val currencySupplementalData = data.toPath
+      .resolve(s"cldr-${CLDRVersion.Version}")
       .resolve("common")
       .resolve("supplemental")
       .resolve("supplementalData.xml")
@@ -462,6 +465,7 @@ object ScalaLocaleCodeGen {
 
   def readCurrencyTypes(data: File): List[CurrencyType] = {
     val currencyTypesData = data.toPath
+      .resolve(s"cldr-${CLDRVersion.Version}")
       .resolve("common")
       .resolve("bcp47")
       .resolve("currency.xml")
@@ -485,6 +489,7 @@ object ScalaLocaleCodeGen {
   def readParentLocales(data: File): Map[String, List[String]] = {
     // Parse the parent locales
     val parentLocalesSupplementalData = data.toPath
+      .resolve(s"cldr-${CLDRVersion.Version}")
       .resolve("common")
       .resolve("supplemental")
       .resolve("supplementalData.xml")
@@ -566,6 +571,7 @@ object ScalaLocaleCodeGen {
 
   def readTerritoryCodes(data: File): Map[String, String] = {
     val territorySupplementalData = data.toPath
+      .resolve(s"cldr-${CLDRVersion.Version}")
       .resolve("common")
       .resolve("supplemental")
       .resolve("supplementalData.xml")
