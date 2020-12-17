@@ -29,7 +29,7 @@ object ScalaLocaleCodeGen {
   }
 
   val currentRelease = CLDRVersion.Version("release-35")
-  
+
   val unicodeIgnorable = new IntPredicate {
     override def test(value: Int): Boolean = !Character.isIdentifierIgnorable(value)
   }
