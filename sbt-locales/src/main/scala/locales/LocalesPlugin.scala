@@ -29,7 +29,7 @@ object LocalesPlugin extends AutoPlugin {
         localesCodeGen := Def.task {
           val cacheLocation                                  = streams.value.cacheDirectory / s"cldr-locales"
           val log                                            = streams.value.log
-          val coreZip                                        = cacheLocation / s"core-${cldrVersion.value.id}.zip"
+          val coreZip                                        = cacheLocation / s"core-${cldrVersion.value}.zip"
           val cachedActionFunction: Set[JFile] => Set[JFile] =
             FileFunction.cached(
               cacheLocation,
@@ -71,7 +71,7 @@ object LocalesPlugin extends AutoPlugin {
     supportDateTimeFormats := true,
     supportNumberFormats := false,
     supportISOCodes := false,
-    cldrVersion := CLDRVersion.LatestVersion
+    cldrVersion := CLDRVersion.Version("38.1")
   )
   // a group of settings that are automatically added to projects.
   override val projectSettings    =

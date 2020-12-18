@@ -4,14 +4,16 @@ import cats.syntax.all._
 
 sealed trait CLDRVersion extends Product with Serializable {
   def id: String
+  def dir: String
 }
 
 object CLDRVersion {
-  case object LatestVersion extends CLDRVersion {
-    val id: String = "latest"
-  }
   final case class Version(version: String) extends CLDRVersion {
-    val id: String = version
+    val id: String  = version
+    val dir: String = version.split('.').toList match {
+      case List(v, "0") => v
+      case _            => version
+    }
   }
 }
 
