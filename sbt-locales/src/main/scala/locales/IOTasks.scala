@@ -18,7 +18,7 @@ object IOTasks {
     val zipFile    = localesDir / coreZip.getName
     if (!zipFile.exists) {
       val url =
-        s"http://unicode.org/Public/cldr/${cldrVersion.id}/core.zip"
+        s"http://unicode.org/Public/cldr/${cldrVersion.dir}/cldr-common-${cldrVersion.id}.zip"
       for {
         _ <-
           IO(
