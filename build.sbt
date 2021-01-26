@@ -44,7 +44,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
     crossScalaVersions := Seq("2.11.12", "2.12.11", "2.13.4", "3.0.0-M2", "3.0.0-M3"),
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.21" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
-    libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.0.0")
+    libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.0")
       .withDottyCompat(scalaVersion.value),
     Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
   )

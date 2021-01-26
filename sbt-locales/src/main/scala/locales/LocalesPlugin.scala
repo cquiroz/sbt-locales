@@ -57,7 +57,7 @@ object LocalesPlugin extends AutoPlugin {
             }
           cachedActionFunction.apply(Set(coreZip)).toSeq
         }.value,
-        libraryDependencies += "org.portable-scala" %% "portable-scala-reflect" % "1.0.0"
+        libraryDependencies += "org.portable-scala" %% "portable-scala-reflect" % "1.1.0"
       )
   }
 
