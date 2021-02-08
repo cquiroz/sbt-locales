@@ -2,7 +2,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 import locales._
 
 lazy val root =
-  crossProject(JSPlatform, JVMPlatform) //, NativePlatform)
+  crossProject(JSPlatform, JVMPlatform, NativePlatform)
     .enablePlugins(LocalesPlugin)
     .in(file("."))
     .settings(
@@ -12,5 +12,5 @@ lazy val root =
       localesFilter := LocalesFilter.All,
       nsFilter := NumberingSystemFilter.All,
       calendarFilter := CalendarFilter.All,
-      libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.0.0"
+      libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.1.0"
     )
