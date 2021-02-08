@@ -33,7 +33,9 @@ lazy val commonSettings = Seq(
   autoAPIMappings := true
 )
 
-lazy val api = crossProject(JSPlatform, JVMPlatform)
+def scalaNativeScala212Version(v: String) = if (v.startsWith("2.12.")) "2.12.13" else v
+
+lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(file("api"))
   .settings(commonSettings: _*)
@@ -44,11 +46,15 @@ lazy val api = crossProject(JSPlatform, JVMPlatform)
     crossScalaVersions := Seq("2.11.12", "2.12.11", "2.13.4", "3.0.0-M2", "3.0.0-M3"),
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.21" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
-    libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.0.0")
+    libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.0")
       .withDottyCompat(scalaVersion.value),
     Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
+  .nativeSettings(
+    scalaVersion ~= scalaNativeScala212Version,
+    crossScalaVersions ~= { _.filter(_.startsWith("2.")).map(scalaNativeScala212Version) }
+  )
 
 lazy val sbt_locales = project
   .in(file("sbt-locales"))
@@ -83,4 +89,4 @@ lazy val root = project
     publishLocal := {},
     publishArtifact := false
   )
-  .aggregate(api.js, api.jvm, sbt_locales)
+  .aggregate(api.js, api.jvm, api.native, sbt_locales)
