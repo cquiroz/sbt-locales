@@ -28,7 +28,7 @@ inThisBuild(
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
-  scalaVersion := "2.12.11",
+  scalaVersion := "2.12.13",
   javaOptions ++= Seq("-Dfile.encoding=UTF8"),
   autoAPIMappings := true
 )
@@ -43,8 +43,8 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "cldr-api",
     scalaVersion := "2.12.11", // needs to match the version for sbt
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", "2.12.11", "2.13.4", "3.0.0-M2", "3.0.0-M3"),
-    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.21" % Test,
+    crossScalaVersions := Seq("2.11.12", "2.12.13", "2.13.4", "3.0.0-M3", "3.0.0-RC1"),
+    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.22" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.0")
       .withDottyCompat(scalaVersion.value),
