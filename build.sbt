@@ -53,7 +53,8 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
   .nativeSettings(
     scalaVersion ~= scalaNativeScala212Version,
-    crossScalaVersions ~= { _.filter(_.startsWith("2.")).map(scalaNativeScala212Version) }
+    crossScalaVersions ~= { _.filter(_.startsWith("2.")).map(scalaNativeScala212Version) },
+    skip in publish := true
   )
 
 lazy val sbt_locales = project
