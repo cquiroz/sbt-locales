@@ -41,7 +41,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(commonSettings: _*)
   .settings(
     name := "cldr-api",
-    scalaVersion := "2.12.11", // needs to match the version for sbt
+    scalaVersion := "2.12.13", // needs to match the version for sbt
     description := "scala-java-locales cldrl api",
     crossScalaVersions := Seq("2.11.12", "2.12.13", "2.13.4", "3.0.0-M3", "3.0.0-RC1"),
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.22" % Test,
@@ -65,7 +65,7 @@ lazy val sbt_locales = project
   .settings(
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
-    scalaVersion := "2.12.11",
+    scalaVersion := "2.12.13",
     crossScalaVersions := Seq(),
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
