@@ -12,5 +12,5 @@ lazy val root =
       localesFilter := LocalesFilter.All,
       nsFilter := NumberingSystemFilter.All,
       calendarFilter := CalendarFilter.All,
-      libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.1.0"
+      libraryDependencies += "org.portable-scala" %%% "portable-scala-reflect" % "1.1.1"
     )

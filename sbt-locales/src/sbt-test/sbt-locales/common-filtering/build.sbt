@@ -14,7 +14,7 @@ lazy val root =
       currencyFilter := CurrencyFilter.Selection("EUR"),
       supportISOCodes := true,
       supportNumberFormats := true,
-      libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.0").withDottyCompat(scalaVersion.value)
+      libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.1").withDottyCompat(scalaVersion.value)
     )
     .nativeSettings(
       scalaVersion := "2.13.4"
