@@ -47,14 +47,12 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.25" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.1")
-      .withDottyCompat(scalaVersion.value),
-    Compile / doc / sources := { if (isDotty.value) Seq() else (Compile / doc / sources).value }
+      .cross(CrossVersion.for3Use2_13),
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
   .nativeSettings(
     scalaVersion ~= scalaNativeScala212Version,
-    crossScalaVersions ~= { _.filter(_.startsWith("2.")).map(scalaNativeScala212Version) },
-    skip in publish := true
+    crossScalaVersions ~= { _.filter(_.startsWith("2.")).map(scalaNativeScala212Version) }
   )
 
 lazy val sbt_locales = project
