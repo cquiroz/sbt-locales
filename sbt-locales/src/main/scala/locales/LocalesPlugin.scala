@@ -23,7 +23,7 @@ object LocalesPlugin extends AutoPlugin {
       taskKey[Seq[JFile]]("Generate scala.js compatible database of tzdb data")
     lazy val baseLocalesSettings: Seq[Def.Setting[_]] =
       Seq(
-        sourceGenerators in Compile += Def.task {
+        Compile / sourceGenerators += Def.task {
           localesCodeGen.value
         },
         localesCodeGen := Def.task {
@@ -48,8 +48,8 @@ object LocalesPlugin extends AutoPlugin {
                 )
                 localesCodeGenImpl(
                   coreZip,
-                  sourceManaged = (sourceManaged in Compile).value,
-                  resourcesManaged = (resourceManaged in Compile).value,
+                  sourceManaged = (Compile / sourceManaged).value,
+                  resourcesManaged = (Compile / resourceManaged).value,
                   filters,
                   cldrVersion = cldrVersion.value,
                   log = log
