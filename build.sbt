@@ -28,12 +28,12 @@ inThisBuild(
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
-  scalaVersion := "2.12.13",
+  scalaVersion := "2.12.14",
   javaOptions ++= Seq("-Dfile.encoding=UTF8"),
   autoAPIMappings := true
 )
 
-def scalaNativeScala212Version(v: String) = if (v.startsWith("2.12.")) "2.12.13" else v
+def scalaNativeScala212Version(v: String) = if (v.startsWith("2.12.")) "2.12.14" else v
 
 lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
@@ -41,9 +41,9 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(commonSettings: _*)
   .settings(
     name := "cldr-api",
-    scalaVersion := "2.12.13", // needs to match the version for sbt
+    scalaVersion := "2.12.14", // needs to match the version for sbt
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", "2.12.13", "2.13.6", "3.0.0-RC3", "3.0.0"),
+    crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.4", "3.0.0-RC3", "3.0.0"),
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.26" % Test,
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.1")
@@ -63,7 +63,7 @@ lazy val sbt_locales = project
   .settings(
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
-    scalaVersion := "2.12.13",
+    scalaVersion := "2.12.14",
     crossScalaVersions := Seq(),
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
