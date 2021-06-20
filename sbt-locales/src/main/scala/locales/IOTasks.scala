@@ -12,13 +12,14 @@ object IOTasks {
     coreZip:      JFile,
     log:          Logger,
     resourcesDir: JFile,
+    cldrBaseUrl:  String,
     cldrVersion:  CLDRVersion
   ): IO[Unit] = {
     val localesDir = resourcesDir / "locales"
     val zipFile    = localesDir / coreZip.getName
     if (!zipFile.exists) {
       val url =
-        s"http://unicode.org/Public/cldr/${cldrVersion.dir}/cldr-common-${cldrVersion.id}.zip"
+        s"$cldrBaseUrl/${cldrVersion.dir}/cldr-common-${cldrVersion.id}.zip"
       for {
         _ <-
           IO(

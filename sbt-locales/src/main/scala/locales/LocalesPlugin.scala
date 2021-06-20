@@ -18,6 +18,7 @@ object LocalesPlugin extends AutoPlugin {
     val supportDateTimeFormats                        = settingKey[Boolean]("Include data to format dates and times")
     val supportNumberFormats                          = settingKey[Boolean]("Include number formats")
     val supportISOCodes                               = settingKey[Boolean]("Include iso codes metadata")
+    val cldrBaseUrl                                   = settingKey[String]("A base URL of cldr database")
     val cldrVersion                                   = settingKey[CLDRVersion]("Version of the cldr database")
     val localesCodeGen                                =
       taskKey[Seq[JFile]]("Generate scala.js compatible database of tzdb data")
@@ -51,6 +52,7 @@ object LocalesPlugin extends AutoPlugin {
                   sourceManaged = (Compile / sourceManaged).value,
                   resourcesManaged = (Compile / resourceManaged).value,
                   filters,
+                  cldrBaseUrl = cldrBaseUrl.value,
                   cldrVersion = cldrVersion.value,
                   log = log
                 )
@@ -71,6 +73,7 @@ object LocalesPlugin extends AutoPlugin {
     supportDateTimeFormats := true,
     supportNumberFormats := false,
     supportISOCodes := false,
+    cldrBaseUrl := "http://unicode.org/Public/cldr",
     cldrVersion := CLDRVersion.Version("38.1")
   )
   // a group of settings that are automatically added to projects.
@@ -82,11 +85,12 @@ object LocalesPlugin extends AutoPlugin {
     sourceManaged:    JFile,
     resourcesManaged: JFile,
     filters:          Filters,
+    cldrBaseUrl:      String,
     cldrVersion:      CLDRVersion,
     log:              Logger
   ): Set[JFile] =
     (for {
-      _  <- IOTasks.downloadCLDR(coreZip, log, resourcesManaged, cldrVersion)
+      _  <- IOTasks.downloadCLDR(coreZip, log, resourcesManaged, cldrBaseUrl, cldrVersion)
       // Use it to detect if files have been already generated
       f1 <- IOTasks.copyProvider(log, sourceManaged, "calendar.scala", "locales/cldr")
       f2 <- IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")
