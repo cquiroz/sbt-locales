@@ -18,7 +18,7 @@ for english and spanish
 Include on `project/plugins.sbt`
 
 ```scala
-addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "2.7.0")
+addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "2.8.0")
 ```
 
 # Configuration
