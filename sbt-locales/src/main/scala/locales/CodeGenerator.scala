@@ -23,9 +23,9 @@ object CodeGenerator {
       if (only.nonEmpty)
         ldmls
           .filter(a => only.contains(a.scalaSafeName))
-          .map(buildClassTree(root, langs, parentLocales, nsFilter))
+          .flatMap(buildClassTree(root, langs, parentLocales, nsFilter))
       else
-        ldmls.map(buildClassTree(root, langs, parentLocales, nsFilter))
+        ldmls.flatMap(buildClassTree(root, langs, parentLocales, nsFilter))
     val objectAll: Tree =
       OBJECTDEF("_all_") := BLOCK(
         LAZYVAL("all", "Array[LDML]") :=
@@ -66,7 +66,7 @@ object CodeGenerator {
     langs:         List[List[String]],
     parentLocales: Map[String, List[String]],
     nsFilter:      String => Boolean
-  )(ldml:          XMLLDML): Tree = {
+  )(ldml:          XMLLDML): List[Tree] = {
     val ldmlSym                 = getModule("LDML")
     val ldmlNumericSym          = getModule("Symbols")
     val ldmlNumberCurrency      = getModule("NumberCurrency")
@@ -167,18 +167,23 @@ object CodeGenerator {
       val currency = ldml.numberPatterns.currencyFormat.fold(NONE)(s => SOME(LIT(s)))
       Apply(ldmlNumberPatternsSym, decimal, percent, currency)
     }
-
-    OBJECTDEF(ldml.scalaSafeName).withParents(
-      Apply(
-        ldmlSym,
-        parent,
-        ldmlLocaleTree,
-        defaultNS,
-        LIST(numericSymbols),
-        gc,
-        gcp,
-        LIST(currencies),
-        np
+    List(
+      OBJECTDEF(ldml.dataScalaSafeName).withFlags(PRIVATEWITHIN("data")) := BLOCK(
+        DEF("currencies", "List[NumberCurrency]") := LIST(currencies),
+        DEF("symbols", "List[Symbols]") := LIST(numericSymbols)
+      ),
+      OBJECTDEF(ldml.scalaSafeName).withParents(
+        Apply(
+          ldmlSym,
+          parent,
+          ldmlLocaleTree,
+          defaultNS,
+          REF(s"${ldml.dataScalaSafeName}.symbols"),
+          gc,
+          gcp,
+          REF(s"${ldml.dataScalaSafeName}.currencies"),
+          np
+        )
       )
     )
   }

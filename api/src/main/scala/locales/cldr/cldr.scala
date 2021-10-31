@@ -88,4 +88,6 @@ final case class XMLLDML(
     List(Some(locale.language), locale.script, locale.territory, locale.variant).flatten
       .mkString("_", "_", "")
 
+  val dataScalaSafeName: String = s"${scalaSafeName}_data"
+
 }
