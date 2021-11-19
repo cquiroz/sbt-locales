@@ -9,6 +9,7 @@ project/metals.sbt
 *.settings/
 /nbproject/private/
 *target/
+.bsp/
 .classpath
 .project
 .checkstyle
