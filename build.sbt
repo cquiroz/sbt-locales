@@ -33,8 +33,6 @@ lazy val commonSettings = Seq(
   autoAPIMappings := true
 )
 
-def scalaNativeScala212Version(v: String) = if (v.startsWith("2.12.")) "2.12.14" else v
-
 lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(file("api"))
@@ -43,17 +41,18 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "cldr-api",
     scalaVersion := "2.12.14", // needs to match the version for sbt
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.4", "3.0.0-RC3", "3.0.0"),
-    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.26" % Test,
+    crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.4", "3.1.1"),
+    libraryDependencies += {
+      if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
+        ("org.scalameta"   % "munit_native0.4_2.13" % "0.7.26" % Test)
+      else
+        ("org.scalameta" %%% "munit"                % "0.7.26" % Test)
+    },
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.1")
       .cross(CrossVersion.for3Use2_13)
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
-  .nativeSettings(
-    scalaVersion ~= scalaNativeScala212Version,
-    crossScalaVersions ~= { _.filter(_.startsWith("2.")).map(scalaNativeScala212Version) }
-  )
 
 lazy val sbt_locales = project
   .in(file("sbt-locales"))
