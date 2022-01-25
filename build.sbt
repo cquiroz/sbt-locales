@@ -45,12 +45,12 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies += {
       // workaround for https://github.com/scala-native/scala-native/issues/2546
       if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        ("org.scalameta"   % "munit_native0.4_2.13" % "0.7.26" % Test)
+        ("org.scalameta"   % "munit_native0.4_2.13" % "0.7.29" % Test)
           .excludeAll(
             ExclusionRule(organization = "org.scala-native")
           )
       else
-        ("org.scalameta" %%% "munit"                % "0.7.26" % Test)
+        ("org.scalameta" %%% "munit"                % "0.7.29" % Test)
     },
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += {
