@@ -41,7 +41,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "cldr-api",
     scalaVersion := "2.12.14", // needs to match the version for sbt
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.4", "3.1.1"),
+    crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.8", "3.1.1"),
     libraryDependencies += {
       // workaround for https://github.com/scala-native/scala-native/issues/2546
       if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
