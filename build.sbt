@@ -97,7 +97,7 @@ lazy val sbt_locales = project
       "com.eed3si9n"           %% "gigahorse-okhttp" % "0.6.0",
       "org.scala-lang.modules" %% "scala-xml"        % "2.0.1",
       "org.typelevel"          %% "cats-core"        % "2.7.0",
-      "org.typelevel"          %% "cats-effect"      % "2.5.4",
+      "org.typelevel"          %% "cats-effect"      % "3.3.9",
       "com.eed3si9n"           %% "treehugger"       % "0.4.4"
     )
   )
