@@ -30,7 +30,10 @@ lazy val commonSettings = Seq(
   name := "sbt-locales",
   scalaVersion := "2.12.14",
   javaOptions ++= Seq("-Dfile.encoding=UTF8"),
-  autoAPIMappings := true
+  autoAPIMappings := true,
+  resolvers += "Sonatype OSS Snapshots".at( // TODO: remove
+    "https://oss.sonatype.org/content/repositories/snapshots"
+  )
 )
 
 lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
@@ -42,16 +45,9 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     scalaVersion := "2.12.14", // needs to match the version for sbt
     description := "scala-java-locales cldrl api",
     crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.4", "3.1.2"),
-    libraryDependencies += {
-      // workaround for https://github.com/scala-native/scala-native/issues/2546
-      if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        ("org.scalameta"   % "munit_native0.4_2.13" % "0.7.29" % Test)
-          .excludeAll(
-            ExclusionRule(organization = "org.scala-native")
-          )
-      else
-        ("org.scalameta" %%% "munit"                % "0.7.29" % Test)
-    },
+    libraryDependencies ++= List(
+      "org.scalameta" %%% "munit" % "1.0.0-M3+39-d7ab5753-SNAPSHOT" % Test
+    ),
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += {
       // workaround for https://github.com/scala-native/scala-native/issues/2546
@@ -66,16 +62,6 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     }
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
-  .nativeSettings(
-    // Workaround for MUnit (MUnit's macros specifically) not being available for Scala 3/Native
-    // https://github.com/scalameta/munit/pull/477
-    Test / test := {
-      if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        (Compile / compile).value
-      else
-        (Test / test).value
-    }
-  )
 
 lazy val sbt_locales = project
   .in(file("sbt-locales"))
@@ -95,7 +81,7 @@ lazy val sbt_locales = project
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
       "com.eed3si9n"           %% "gigahorse-okhttp" % "0.6.0",
-      "org.scala-lang.modules" %% "scala-xml"        % "2.0.1",
+      "org.scala-lang.modules" %% "scala-xml"        % "2.1.0",
       "org.typelevel"          %% "cats-core"        % "2.7.0",
       "org.typelevel"          %% "cats-effect"      % "2.5.4",
       "com.eed3si9n"           %% "treehugger"       % "0.4.4"
