@@ -46,20 +46,10 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     description := "scala-java-locales cldrl api",
     crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.4", "3.1.2"),
     libraryDependencies ++= List(
-      "org.scalameta" %%% "munit" % "1.0.0-M3+39-d7ab5753-SNAPSHOT" % Test
+      "org.portable-scala" %%% "portable-scala-reflect" % "1.1.2",
+      "org.scalameta"      %%% "munit"                  % "1.0.0-M3+39-d7ab5753-SNAPSHOT" % Test
     ),
-    testFrameworks += new TestFramework("munit.Framework"),
-    libraryDependencies += {
-      // workaround for https://github.com/scala-native/scala-native/issues/2546
-      if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        ("org.portable-scala"   % "portable-scala-reflect_native0.4_2.13" % "1.1.1")
-          .excludeAll(
-            ExclusionRule(organization = "org.scala-native")
-          )
-      else
-        ("org.portable-scala" %%% "portable-scala-reflect"                % "1.1.1")
-          .cross(CrossVersion.for3Use2_13)
-    }
+    testFrameworks += new TestFramework("munit.Framework")
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
