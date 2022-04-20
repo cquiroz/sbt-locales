@@ -56,12 +56,12 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies += {
       // workaround for https://github.com/scala-native/scala-native/issues/2546
       if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        ("org.portable-scala"   % "portable-scala-reflect_native0.4_2.13" % "1.1.1")
+        ("org.portable-scala"   % "portable-scala-reflect_native0.4_2.13" % "1.1.2")
           .excludeAll(
             ExclusionRule(organization = "org.scala-native")
           )
       else
-        ("org.portable-scala" %%% "portable-scala-reflect"                % "1.1.1")
+        ("org.portable-scala" %%% "portable-scala-reflect"                % "1.1.2")
           .cross(CrossVersion.for3Use2_13)
     }
   )
