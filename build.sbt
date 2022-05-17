@@ -26,7 +26,7 @@ inThisBuild(
   )
 )
 
-lazy val scalaVersion212 = "2.12.14"
+lazy val scalaVersion212 = "2.12.14" // needs to match the version for sbt
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
@@ -41,7 +41,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(commonSettings: _*)
   .settings(
     name := "cldr-api",
-    scalaVersion := scalaVersion212, // needs to match the version for sbt
+    scalaVersion := scalaVersion212,
     description := "scala-java-locales cldrl api",
     crossScalaVersions := Seq("2.11.12", scalaVersion212, "2.13.8", "3.1.2"),
     libraryDependencies ++= List(
