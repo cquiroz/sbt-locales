@@ -26,9 +26,11 @@ inThisBuild(
   )
 )
 
+lazy val scalaVersion212 = "2.12.14" // needs to match the version for sbt
+
 lazy val commonSettings = Seq(
   name := "sbt-locales",
-  scalaVersion := "2.12.14",
+  scalaVersion := scalaVersion212,
   javaOptions ++= Seq("-Dfile.encoding=UTF8"),
   autoAPIMappings := true
 )
@@ -39,43 +41,16 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(commonSettings: _*)
   .settings(
     name := "cldr-api",
-    scalaVersion := "2.12.14", // needs to match the version for sbt
+    scalaVersion := scalaVersion212,
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", "2.12.14", "2.13.4", "3.1.2"),
-    libraryDependencies += {
-      // workaround for https://github.com/scala-native/scala-native/issues/2546
-      if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        ("org.scalameta"   % "munit_native0.4_2.13" % "0.7.29" % Test)
-          .excludeAll(
-            ExclusionRule(organization = "org.scala-native")
-          )
-      else
-        ("org.scalameta" %%% "munit"                % "0.7.29" % Test)
-    },
-    testFrameworks += new TestFramework("munit.Framework"),
-    libraryDependencies += {
-      // workaround for https://github.com/scala-native/scala-native/issues/2546
-      if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        ("org.portable-scala"   % "portable-scala-reflect_native0.4_2.13" % "1.1.1")
-          .excludeAll(
-            ExclusionRule(organization = "org.scala-native")
-          )
-      else
-        ("org.portable-scala" %%% "portable-scala-reflect"                % "1.1.1")
-          .cross(CrossVersion.for3Use2_13)
-    }
+    crossScalaVersions := Seq("2.11.12", scalaVersion212, "2.13.8", "3.1.2"),
+    libraryDependencies ++= List(
+      ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.2").cross(CrossVersion.for3Use2_13),
+      "org.scalameta"       %%% "munit"                  % "1.0.0-M4" % Test
+    ),
+    testFrameworks += new TestFramework("munit.Framework")
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
-  .nativeSettings(
-    // Workaround for MUnit (MUnit's macros specifically) not being available for Scala 3/Native
-    // https://github.com/scalameta/munit/pull/477
-    Test / test := {
-      if (scalaVersion.value.startsWith("3.") && crossProjectPlatform.value.identifier == "native")
-        (Compile / compile).value
-      else
-        (Test / test).value
-    }
-  )
 
 lazy val sbt_locales = project
   .in(file("sbt-locales"))
@@ -85,7 +60,7 @@ lazy val sbt_locales = project
   .settings(
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
-    scalaVersion := "2.12.14",
+    scalaVersion := scalaVersion212,
     crossScalaVersions := Seq(),
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
@@ -95,7 +70,7 @@ lazy val sbt_locales = project
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
       "com.eed3si9n"           %% "gigahorse-okhttp" % "0.6.0",
-      "org.scala-lang.modules" %% "scala-xml"        % "2.0.1",
+      "org.scala-lang.modules" %% "scala-xml"        % "2.1.0",
       "org.typelevel"          %% "cats-core"        % "2.7.0",
       "org.typelevel"          %% "cats-effect"      % "2.5.4",
       "com.eed3si9n"           %% "treehugger"       % "0.4.4"
