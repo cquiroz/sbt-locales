@@ -26,7 +26,7 @@ inThisBuild(
   )
 )
 
-lazy val scalaVersion212 = "2.12.16" // needs to match the version for sbt
+lazy val scalaVersion212 = "2.12.17" // needs to match the version for sbt
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
@@ -43,7 +43,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "cldr-api",
     scalaVersion := scalaVersion212,
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", scalaVersion212, "2.13.8", "3.1.3"),
+    crossScalaVersions := Seq("2.11.12", scalaVersion212, "2.13.10", "3.1.3"),
     libraryDependencies ++= List(
       ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.2").cross(CrossVersion.for3Use2_13),
       "org.scalameta"       %%% "munit"                  % "1.0.0-M6" % Test
