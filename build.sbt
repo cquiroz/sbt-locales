@@ -26,7 +26,7 @@ inThisBuild(
   )
 )
 
-lazy val scalaVersion212 = "2.12.14" // needs to match the version for sbt
+lazy val scalaVersion212 = "2.12.17" // needs to match the version for sbt
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
@@ -43,10 +43,10 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "cldr-api",
     scalaVersion := scalaVersion212,
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq("2.11.12", scalaVersion212, "2.13.8", "3.1.2"),
+    crossScalaVersions := Seq("2.11.12", scalaVersion212, "2.13.10", "3.1.3"),
     libraryDependencies ++= List(
       ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.2").cross(CrossVersion.for3Use2_13),
-      "org.scalameta"       %%% "munit"                  % "1.0.0-M4" % Test
+      "org.scalameta"       %%% "munit"                  % "1.0.0-M6" % Test
     ),
     testFrameworks += new TestFramework("munit.Framework")
   )
@@ -69,9 +69,9 @@ lazy val sbt_locales = project
     Compile / resources ++= (api.jvm / Compile / sources).value,
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
-      "com.eed3si9n"           %% "gigahorse-okhttp" % "0.6.0",
+      "com.eed3si9n"           %% "gigahorse-okhttp" % "0.7.0",
       "org.scala-lang.modules" %% "scala-xml"        % "2.1.0",
-      "org.typelevel"          %% "cats-core"        % "2.7.0",
+      "org.typelevel"          %% "cats-core"        % "2.8.0",
       "org.typelevel"          %% "cats-effect"      % "2.5.5",
       "com.eed3si9n"           %% "treehugger"       % "0.4.4"
     )
