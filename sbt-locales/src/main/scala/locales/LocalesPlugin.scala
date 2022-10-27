@@ -3,6 +3,7 @@ package locales
 import java.io.{ File => JFile }
 import sbt._
 import sbt.util.Logger
+import cats.effect.unsafe.implicits.global
 import Keys._
 
 object LocalesPlugin extends AutoPlugin {
