@@ -46,7 +46,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     crossScalaVersions := Seq(scalaVersion212, "2.13.10", "3.2.1", "2.11.12"),
     libraryDependencies ++= List(
       ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.2").cross(CrossVersion.for3Use2_13),
-      "org.scalameta"       %%% "munit"                  % "1.0.0-M6" % Test
+      "org.scalameta"       %%% "munit"                  % "1.0.0-M7" % Test
     ),
     testFrameworks += new TestFramework("munit.Framework")
   )
@@ -71,8 +71,8 @@ lazy val sbt_locales = project
     libraryDependencies ++= Seq(
       "com.eed3si9n"           %% "gigahorse-okhttp" % "0.7.0",
       "org.scala-lang.modules" %% "scala-xml"        % "2.1.0",
-      "org.typelevel"          %% "cats-core"        % "2.8.0",
-      "org.typelevel"          %% "cats-effect"      % "3.3.14",
+      "org.typelevel"          %% "cats-core"        % "2.9.0",
+      "org.typelevel"          %% "cats-effect"      % "3.4.1",
       "com.eed3si9n"           %% "treehugger"       % "0.4.4"
     )
   )
