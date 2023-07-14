@@ -46,7 +46,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     crossScalaVersions := Seq(scalaVersion212, "2.13.11", "3.3.0"),
     libraryDependencies ++= List(
       ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.2").cross(CrossVersion.for3Use2_13),
-      "org.scalameta"       %%% "munit"                  % "1.0.0-M7" % Test
+      "org.scalameta"       %%% "munit"                  % "1.0.0-M8" % Test
     ),
     testFrameworks += new TestFramework("munit.Framework")
   )
