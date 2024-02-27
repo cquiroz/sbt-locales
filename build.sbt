@@ -26,7 +26,7 @@ inThisBuild(
   )
 )
 
-lazy val scalaVersion212 = "2.12.18" // needs to match the version for sbt
+lazy val scalaVersion212 = "2.12.19" // needs to match the version for sbt
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
