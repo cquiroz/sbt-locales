@@ -25,3 +25,4 @@ project/metals.sbt
 .bloop
 /project/project/
 /project/target/
+.direnv/

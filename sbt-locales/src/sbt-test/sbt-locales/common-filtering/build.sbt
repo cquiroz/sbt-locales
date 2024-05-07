@@ -8,14 +8,11 @@ lazy val root =
     .settings(
       name := "no-filtering",
       cldrVersion := CLDRVersion.Version("38.1"),
-      scalaVersion := "3.0.0-M3",
+      scalaVersion := "3.4.1",
       localesFilter := LocalesFilter.Selection("en-US", "fi", "fi-FI"),
       nsFilter := NumberingSystemFilter.Minimal,
       currencyFilter := CurrencyFilter.Selection("EUR"),
       supportISOCodes := true,
       supportNumberFormats := true,
-      libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.1").withDottyCompat(scalaVersion.value)
-    )
-    .nativeSettings(
-      scalaVersion := "2.13.4"
+      libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.2").cross(CrossVersion.for3Use2_13)
     )
