@@ -26,7 +26,7 @@ inThisBuild(
   )
 )
 
-lazy val scalaVersion212 = "2.12.18" // needs to match the version for sbt
+lazy val scalaVersion212 = "2.12.19" // needs to match the version for sbt
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
@@ -71,7 +71,7 @@ lazy val sbt_locales = project
     libraryDependencies ++= Seq(
       "com.eed3si9n"           %% "gigahorse-okhttp" % "0.7.0",
       "org.scala-lang.modules" %% "scala-xml"        % "2.3.0",
-      "org.typelevel"          %% "cats-core"        % "2.9.0",
+      "org.typelevel"          %% "cats-core"        % "2.10.0",
       "org.typelevel"          %% "cats-effect"      % "3.5.4",
       "com.eed3si9n"           %% "treehugger"       % "0.4.4"
     )
