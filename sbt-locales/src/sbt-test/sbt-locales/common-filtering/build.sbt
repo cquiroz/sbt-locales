@@ -14,6 +14,6 @@ lazy val root =
       currencyFilter := CurrencyFilter.Selection("EUR"),
       supportISOCodes := true,
       supportNumberFormats := true,
-      libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.2")
+      libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.3")
         .cross(CrossVersion.for3Use2_13)
     )
