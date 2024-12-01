@@ -7,7 +7,7 @@ lazy val root =
     .in(file("."))
     .settings(
       name := "no-filtering",
-      scalaVersion := "2.13.14",
+      scalaVersion := "2.13.15",
       cldrVersion := CLDRVersion.Version("35.0"),
       localesFilter := LocalesFilter.All,
       nsFilter := NumberingSystemFilter.All,
