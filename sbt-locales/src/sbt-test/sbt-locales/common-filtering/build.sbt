@@ -8,7 +8,7 @@ lazy val root =
     .settings(
       name := "no-filtering",
       cldrVersion := CLDRVersion.Version("38.1"),
-      scalaVersion := "3.3.3",
+      scalaVersion := "3.3.5",
       localesFilter := LocalesFilter.Selection("en-US", "fi", "fi-FI"),
       nsFilter := NumberingSystemFilter.Minimal,
       currencyFilter := CurrencyFilter.Selection("EUR"),
