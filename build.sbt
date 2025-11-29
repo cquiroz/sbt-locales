@@ -7,7 +7,8 @@ pluginCrossBuild / sbtVersion := "1.2.8"
 
 inThisBuild(
   List(
-    organization := "io.github.cquiroz",
+    organization  := "io.github.cquiroz",
+    versionScheme := Some("early-semver"),
     homepage := Some(url("https://github.com/cquiroz/sbt-locales")),
     licenses := Seq("BSD 3-Clause License" -> url("https://opensource.org/licenses/BSD-3-Clause")),
     developers := List(

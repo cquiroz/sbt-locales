@@ -24,9 +24,8 @@ object IOTasks {
       localesDir.mkdirs
       SbtIO.unzipURL(new URL(url), localesDir)
       log.info(s"CLDR files expanded on $localesDir")
-    } else {
+    } else
       log.debug("cldr files already available")
-    }
   }
 
   def generateCLDR(
