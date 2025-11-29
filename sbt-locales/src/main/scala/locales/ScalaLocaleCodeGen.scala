@@ -1,6 +1,5 @@
 package locales
 
-import cats.implicits._
 import java.io.{ File, FileInputStream, InputStream, InputStreamReader }
 import java.nio.charset.Charset
 import java.nio.file.Files
@@ -129,11 +128,11 @@ object ScalaLocaleCodeGen {
 
     val datePatterns                  = (for {
       df <- xml \\ "dateFormats"
-    } yield readPatterns(df, "dateFormat", "dateFormatLength")).headOption.foldMap(_.toList).toMap
+    } yield readPatterns(df, "dateFormat", "dateFormatLength")).headOption.fold(Map.empty[Int, String])(_.toMap)
 
     val timePatterns = (for {
       df <- xml \\ "timeFormats"
-    } yield readPatterns(df, "timeFormat", "timeFormatLength")).headOption.foldMap(_.toList).toMap
+    } yield readPatterns(df, "timeFormat", "timeFormatLength")).headOption.fold(Map.empty[Int, String])(_.toMap)
 
     Some(CalendarPatterns(datePatterns, timePatterns))
   }

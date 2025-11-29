@@ -1,7 +1,5 @@
 package locales
 
-import cats.syntax.all._
-
 sealed trait CLDRVersion extends Product with Serializable {
   def id: String
   def dir: String
@@ -24,13 +22,13 @@ sealed trait NumberingSystemFilter extends Product with Serializable {
 
 object NumberingSystemFilter {
   case object Minimal extends NumberingSystemFilter {
-    def filter: String => Boolean = _ === "latn"
+    def filter: String => Boolean = _ == "latn"
   }
   case object All     extends NumberingSystemFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends NumberingSystemFilter {
-    def filter: String => Boolean = c => c === "latn" || s.contains(c)
+    def filter: String => Boolean = c => c == "latn" || s.contains(c)
   }
 
   object Selection {
@@ -46,13 +44,13 @@ sealed trait CalendarFilter extends Product with Serializable {
 
 object CalendarFilter {
   case object Minimal extends CalendarFilter {
-    def filter: String => Boolean = _ === "gregorian"
+    def filter: String => Boolean = _ == "gregorian"
   }
   case object All     extends CalendarFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends CalendarFilter {
-    def filter: String => Boolean = c => c === "gregorian" || s.contains(c)
+    def filter: String => Boolean = c => c == "gregorian" || s.contains(c)
   }
 
   object Selection {
@@ -68,14 +66,14 @@ sealed trait LocalesFilter extends Product with Serializable {
 
 object LocalesFilter {
   case object Minimal extends LocalesFilter {
-    def filter: String => Boolean = l => l === "root" || l === "en"
+    def filter: String => Boolean = l => l == "root" || l == "en"
   }
   case object All     extends LocalesFilter {
     def filter: String => Boolean = _ => true
   }
   final case class Selection(s: List[String]) extends LocalesFilter {
     def filter: String => Boolean =
-      l => l === "root" || l === "en" || s.map(_.replaceAll("-", "_")).contains(l)
+      l => l == "root" || l == "en" || s.map(_.replaceAll("-", "_")).contains(l)
   }
 
   object Selection {

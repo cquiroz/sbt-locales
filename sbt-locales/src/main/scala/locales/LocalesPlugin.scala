@@ -3,7 +3,6 @@ package locales
 import java.io.{ File => JFile }
 import sbt._
 import sbt.util.Logger
-import cats.effect.unsafe.implicits.global
 import Keys._
 
 object LocalesPlugin extends AutoPlugin {
@@ -89,21 +88,16 @@ object LocalesPlugin extends AutoPlugin {
     cldrBaseUrl:      String,
     cldrVersion:      CLDRVersion,
     log:              Logger
-  ): Set[JFile] =
-    (for {
-      _  <- IOTasks.downloadCLDR(coreZip, log, resourcesManaged, cldrBaseUrl, cldrVersion)
-      // Use it to detect if files have been already generated
-      f1 <- IOTasks.copyProvider(log, sourceManaged, "calendar.scala", "locales/cldr")
-      f2 <- IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")
-      f3 <- IOTasks.copyProvider(log, sourceManaged, "currency.scala", "locales/cldr")
-      f4 <- IOTasks.copyProvider(log, sourceManaged, "number.scala", "locales/cldr")
-      f5 <- IOTasks.copyProvider(log, sourceManaged, "package.scala", "locales/cldr")
-      f6 <- IOTasks.copyProvider(log, sourceManaged, "provider.scala", "locales/cldr")
-      f7 <- IOTasks.copyProvider(log, sourceManaged, "ldmlprovider.scala", "locales/cldr")
-      f  <- IOTasks.generateCLDR(
-             sourceManaged,
-             resourcesManaged / "locales",
-             filters
-           )
-    } yield Seq(f1, f2, f3, f4, f5, f6, f7) ++ f).unsafeRunSync.toSet
+  ): Set[JFile] = {
+    IOTasks.downloadCLDR(coreZip, log, resourcesManaged, cldrBaseUrl, cldrVersion)
+    val f1 = IOTasks.copyProvider(log, sourceManaged, "calendar.scala", "locales/cldr")
+    val f2 = IOTasks.copyProvider(log, sourceManaged, "cldr.scala", "locales/cldr")
+    val f3 = IOTasks.copyProvider(log, sourceManaged, "currency.scala", "locales/cldr")
+    val f4 = IOTasks.copyProvider(log, sourceManaged, "number.scala", "locales/cldr")
+    val f5 = IOTasks.copyProvider(log, sourceManaged, "package.scala", "locales/cldr")
+    val f6 = IOTasks.copyProvider(log, sourceManaged, "provider.scala", "locales/cldr")
+    val f7 = IOTasks.copyProvider(log, sourceManaged, "ldmlprovider.scala", "locales/cldr")
+    val f  = IOTasks.generateCLDR(sourceManaged, resourcesManaged / "locales", filters)
+    (Seq(f1, f2, f3, f4, f5, f6, f7) ++ f).toSet
+  }
 }
