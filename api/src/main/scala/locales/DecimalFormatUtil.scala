@@ -221,13 +221,11 @@ object DecimalFormatUtil {
         countMinimum(patterns.positive.pattern, PatternCharDecimalSeparator, false)
 
       val exponentMin: Option[Int] =
-        for {
-          maxInt <- maxIntegerDigits
-          minInt <- count
-          d       = minInt
-          if hasExponent
-          if maxInt > minInt && maxInt > 1
-        } yield 1
+        (maxIntegerDigits, count) match {
+          case (Some(maxInt), Some(minInt)) if hasExponent && maxInt > minInt && maxInt > 1 =>
+            Some(1)
+          case _                                                                            => None
+        }
 
       exponentMin
         .orElse(count)
