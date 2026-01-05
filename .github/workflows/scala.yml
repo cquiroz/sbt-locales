@@ -22,4 +22,4 @@ jobs:
       - name: Run tests
         run: |
           sbt clean +apiJVM/test +apiJS/test +apiNative/test +apiJVM/publishLocal
-          sbt sbt_locales/scripted
+          sbt sbt_locales2_12/scripted

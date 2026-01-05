@@ -3,8 +3,6 @@ import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-pluginCrossBuild / sbtVersion := "1.2.8"
-
 inThisBuild(
   List(
     organization := "io.github.cquiroz",
@@ -27,6 +25,7 @@ inThisBuild(
 )
 
 lazy val scalaVersion212 = "2.12.21" // needs to match the version for sbt
+lazy val scalaVersion3   = "3.3.3"
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
@@ -43,7 +42,7 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "cldr-api",
     scalaVersion := scalaVersion212,
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq(scalaVersion212, "2.13.18", "3.3.3"),
+    crossScalaVersions := Seq(scalaVersion212, "2.13.18", scalaVersion3),
     libraryDependencies ++= List(
       ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.3").cross(CrossVersion.for3Use2_13),
       "org.scalameta"       %%% "munit"                  % "1.2.1" % Test
@@ -52,16 +51,19 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
-lazy val sbt_locales = project
-  .in(file("sbt-locales"))
+lazy val sbt_locales = (projectMatrix in file("sbt-locales"))
   .enablePlugins(SbtPlugin)
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
-    scalaVersion := scalaVersion212,
-    crossScalaVersions := Seq(),
+    pluginCrossBuild / sbtVersion := {
+      scalaBinaryVersion.value match {
+        case "2.12" => "1.5.8"
+        case _      => "2.0.0-RC7"
+      }
+    },
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
@@ -73,9 +75,10 @@ lazy val sbt_locales = project
       "org.scala-lang.modules" %% "scala-xml"        % "2.4.0",
       "org.typelevel"          %% "cats-core"        % "2.13.0",
       "org.typelevel"          %% "cats-effect"      % "3.6.3",
-      "com.eed3si9n"           %% "treehugger"       % "0.4.4"
+      ("com.eed3si9n"          %% "treehugger"       % "0.4.4").cross(CrossVersion.for3Use2_13)
     )
   )
+  .jvmPlatform(Seq(scalaVersion212, scalaVersion3))
   .dependsOn(api.jvm)
 
 lazy val root = project
@@ -85,4 +88,5 @@ lazy val root = project
     publishLocal := {},
     publishArtifact := false
   )
-  .aggregate(api.js, api.jvm, api.native, sbt_locales)
+  .aggregate(api.js, api.jvm, api.native)
+  .aggregate(sbt_locales.projectRefs: _*)

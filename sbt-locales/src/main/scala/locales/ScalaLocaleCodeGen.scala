@@ -6,8 +6,7 @@ import java.nio.charset.Charset
 import java.nio.file.Files
 import java.util.function.IntPredicate
 import javax.xml.parsers.SAXParserFactory
-import scala.collection.JavaConverters._
-import scala.collection.breakOut
+import scala.jdk.CollectionConverters._
 import scala.xml.{ XML, _ }
 import locales.cldr._
 
@@ -369,7 +368,7 @@ object ScalaLocaleCodeGen {
       LDMLLocale(language, territory, variant, script),
       fileName,
       defaultNS.flatMap(ns.get),
-      symbols.filterKeys(ns => filters.nsFilter.filter(ns.id)),
+      symbols.filter { case (ns, _) => filters.nsFilter.filter(ns.id) },
       gregorian.flatten.headOption.filter(_ => filters.supportDateTimeFormats),
       gregorianDatePatterns.flatten.headOption.filter(_ => filters.supportDateTimeFormats),
       currencies,
@@ -599,8 +598,8 @@ object ScalaLocaleCodeGen {
         isoCountryCodes,
         isoLanguages,
         scripts,
-        territoryCodes.filterKeys(isoCountryCodes.contains),
-        iso3LanguageCodes.filterKeys(isoLanguages.contains),
+        territoryCodes.filter { case (k, _) => isoCountryCodes.contains(k) },
+        iso3LanguageCodes.filter { case (k, _) => isoLanguages.contains(k) },
         filters.supportISOCodes
       )
     )
@@ -625,7 +624,7 @@ object ScalaLocaleCodeGen {
     val f2        = generateCalendarsFile(base, calendars, filters.calendarFilter.filter)
 
     val numericSystemsMap: Map[String, NumberingSystem] =
-      numericSystems.map(n => n.id -> n)(breakOut)
+      numericSystems.map(n => n.id -> n).toMap
     // latn NS must exist, break if not found
     val latnNS                                          = numericSystemsMap("latn")
 
