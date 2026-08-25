@@ -73,7 +73,7 @@ lazy val sbt_locales = project
       "org.scala-lang.modules" %% "scala-xml"        % "2.4.0",
       "org.typelevel"          %% "cats-core"        % "2.13.0",
       "org.typelevel"          %% "cats-effect"      % "3.6.4",
-      "com.eed3si9n"           %% "treehugger"       % "0.4.4"
+      "com.eed3si9n"           %% "treehugger"       % "0.5.0"
     )
   )
   .dependsOn(api.jvm)
