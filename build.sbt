@@ -70,7 +70,7 @@ lazy val sbt_locales = project
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
       "com.eed3si9n"           %% "gigahorse-okhttp" % "0.9.3",
-      "org.scala-lang.modules" %% "scala-xml"        % "2.4.0",
+      "org.scala-lang.modules" %% "scala-xml"        % "2.5.0",
       "org.typelevel"          %% "cats-core"        % "2.13.0",
       "org.typelevel"          %% "cats-effect"      % "3.6.4",
       "com.eed3si9n"           %% "treehugger"       % "0.4.4"
