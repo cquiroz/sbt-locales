@@ -13,7 +13,15 @@ lazy val root =
       nsFilter := NumberingSystemFilter.Minimal,
       currencyFilter := CurrencyFilter.Selection("EUR"),
       supportISOCodes := true,
-      supportNumberFormats := true,
-      libraryDependencies += ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.3")
+      supportNumberFormats := true
+    )
+    .jvmSettings(
+      libraryDependencies += ("org.portable-scala" %% "portable-scala-reflect" % "1.1.3")
         .cross(CrossVersion.for3Use2_13)
+    )
+    .jsSettings(
+      libraryDependencies += "org.portable-scala" % "portable-scala-reflect_sjs1_2.13" % "1.1.3"
+    )
+    .nativeSettings(
+      libraryDependencies += "org.portable-scala" % "portable-scala-reflect_native0.5_2.13" % "1.1.3"
     )

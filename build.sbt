@@ -3,8 +3,6 @@ import sbtcrossproject.CrossPlugin.autoImport.{ CrossType, crossProject }
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-pluginCrossBuild / sbtVersion := "1.2.8"
-
 inThisBuild(
   List(
     organization := "io.github.cquiroz",
@@ -26,7 +24,12 @@ inThisBuild(
   )
 )
 
-lazy val scalaVersion212 = "2.12.21" // needs to match the version for sbt
+lazy val scalaVersion212 = "2.12.21" // needs to match the version for sbt 1
+lazy val scalaVersion3   = "3.8.4"   // needs to match the version for sbt 2
+
+// Oldest sbt each plugin artifact is compiled against
+lazy val sbtVersion1 = "1.2.8"
+lazy val sbtVersion2 = "2.0.8"
 
 lazy val commonSettings = Seq(
   name := "sbt-locales",
@@ -61,7 +64,11 @@ lazy val sbt_locales = project
     name := "sbt-locales",
     description := "Sbt plugin to build custom locale databases",
     scalaVersion := scalaVersion212,
-    crossScalaVersions := Seq(),
+    crossScalaVersions := Seq(scalaVersion212, scalaVersion3),
+    pluginCrossBuild / sbtVersion := (scalaBinaryVersion.value match {
+      case "2.12" => sbtVersion1
+      case _      => sbtVersion2
+    }),
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value)

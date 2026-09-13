@@ -1,5 +1,6 @@
 package locales
 
-object Main extends App {
-  Console.println("Hello World: " + (args mkString ", "))
+object Main {
+  def main(args: Array[String]): Unit =
+    Console.println("Hello World: " + args.mkString(", "))
 }

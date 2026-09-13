@@ -6,8 +6,6 @@ import java.nio.charset.Charset
 import java.nio.file.Files
 import java.util.function.IntPredicate
 import javax.xml.parsers.SAXParserFactory
-import scala.collection.JavaConverters._
-import scala.collection.breakOut
 import scala.xml.{ XML, _ }
 import locales.cldr._
 
@@ -311,7 +309,7 @@ object ScalaLocaleCodeGen {
       val sns       = nsAttr.flatMap(ns.get).getOrElse(latn)
       // TODO process aliases
       val nsSymbols = s.collect {
-        case s @ <symbols>{_*}</symbols> if (s \ "alias").isEmpty =>
+        case s: Elem if s.label == "symbols" && (s \ "alias").isEmpty =>
           // elements may not be present and they could be the empty string
           val decimal       = symbolC(s \ "decimal")
           val group         = symbolC(s \ "group")
@@ -339,7 +337,7 @@ object ScalaLocaleCodeGen {
           )
           sns -> sym
 
-        case <symbols>{_*}</symbols>                              =>
+        case s: Elem if s.label == "symbols" =>
           // We take advantage that all aliases on CLDR are to latn
           sns -> NumberSymbols.alias(sns, latn)
       }
@@ -369,7 +367,7 @@ object ScalaLocaleCodeGen {
       LDMLLocale(language, territory, variant, script),
       fileName,
       defaultNS.flatMap(ns.get),
-      symbols.filterKeys(ns => filters.nsFilter.filter(ns.id)),
+      symbols.filter { case (ns, _) => filters.nsFilter.filter(ns.id) },
       gregorian.flatten.headOption.filter(_ => filters.supportDateTimeFormats),
       gregorianDatePatterns.flatten.headOption.filter(_ => filters.supportDateTimeFormats),
       currencies,
@@ -507,18 +505,12 @@ object ScalaLocaleCodeGen {
     filters:           Filters
   ): List[XMLLDML] = {
     // All files under common/main
-    val files = Files
-      .newDirectoryStream(
-        data.toPath
-          .resolve("common")
-          .resolve("main")
-      )
-      .iterator()
-      .asScala
+    val files = sbt.io.IO
+      .listFiles(data.toPath.resolve("common").resolve("main").toFile)
       .toList
 
     for {
-      f <- files.map(k => k.toFile)
+      f <- files
       if filters.localesFilter.filter(f.getName.replaceAll("\\.xml$", ""))
       r  = new InputStreamReader(new FileInputStream(f), "UTF-8")
     } yield constructLDMLDescriptor(
@@ -544,12 +536,11 @@ object ScalaLocaleCodeGen {
   }
 
   def parseTerritoryCodes(xml: Node): Map[String, String] =
-    (for {
-      territoryCodes <- xml \ "codeMappings" \ "territoryCodes"
-      alpha2          = (territoryCodes \ "@type").text
-      alpha3          = Option((territoryCodes \ "@alpha3").text).filter(_.nonEmpty)
-      entry           = alpha3.map(alpha2 -> _)
-    } yield entry).flatten.toMap
+    (xml \ "codeMappings" \ "territoryCodes").map { territoryCodes =>
+      val alpha2 = (territoryCodes \ "@type").text
+      val alpha3 = Option((territoryCodes \ "@alpha3").text).filter(_.nonEmpty)
+      alpha3.map(alpha2 -> _)
+    }.flatten.toMap
 
   def readIso3LanguageCodes(in: InputStream): Map[String, String] =
     scala.io.Source
@@ -599,8 +590,8 @@ object ScalaLocaleCodeGen {
         isoCountryCodes,
         isoLanguages,
         scripts,
-        territoryCodes.filterKeys(isoCountryCodes.contains),
-        iso3LanguageCodes.filterKeys(isoLanguages.contains),
+        territoryCodes.filter { case (k, _) => isoCountryCodes.contains(k) },
+        iso3LanguageCodes.filter { case (k, _) => isoLanguages.contains(k) },
         filters.supportISOCodes
       )
     )
@@ -625,7 +616,7 @@ object ScalaLocaleCodeGen {
     val f2        = generateCalendarsFile(base, calendars, filters.calendarFilter.filter)
 
     val numericSystemsMap: Map[String, NumberingSystem] =
-      numericSystems.map(n => n.id -> n)(breakOut)
+      numericSystems.iterator.map(n => n.id -> n).toMap
     // latn NS must exist, break if not found
     val latnNS                                          = numericSystemsMap("latn")
 
