@@ -7,8 +7,15 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: olafurpg/setup-scala@v14
+      - uses: actions/checkout@v6
+      - name: Setup Java (temurin@17)
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: sbt
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
       - name: Publish
         run: sbt clean ci-release
         env:

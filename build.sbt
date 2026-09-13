@@ -53,6 +53,11 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     ),
     testFrameworks += new TestFramework("munit.Framework")
   )
+  .jvmSettings(
+    // CI builds on JDK 17 so it can build the sbt 2 plugin; keep the published
+    // library usable on Java 8.
+    scalacOptions ++= Seq("-release", "8")
+  )
   .jsSettings(scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
 lazy val sbt_locales = project
@@ -68,6 +73,19 @@ lazy val sbt_locales = project
     pluginCrossBuild / sbtVersion := (scalaBinaryVersion.value match {
       case "2.12" => sbtVersion1
       case _      => sbtVersion2
+    }),
+    // scriptedSbt defaults to the version we compile against. 1.2.8 predates the
+    // Maven layout the current plugins are published with, so run the tests on
+    // the sbt we are building with instead.
+    scriptedSbt := (scalaBinaryVersion.value match {
+      case "2.12" => sbtVersion.value
+      case _      => sbtVersion2
+    }),
+    // The sbt 1 plugin must keep running on the JDKs sbt 1 supports, even though
+    // CI now builds on JDK 17. The sbt 2 row needs JDK 17 regardless.
+    scalacOptions ++= (scalaBinaryVersion.value match {
+      case "2.12" => Seq("-release", "8")
+      case _      => Nil
     }),
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
