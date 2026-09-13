@@ -12,18 +12,20 @@ object LocalesPlugin extends AutoPlugin {
     /**
       * Settings
       */
-    val nsFilter                                      = settingKey[NumberingSystemFilter]("Filter for numbering systems")
-    val calendarFilter                                = settingKey[CalendarFilter]("Filter for calendars")
-    val localesFilter                                 = settingKey[LocalesFilter]("Filter for locales")
-    val currencyFilter                                = settingKey[CurrencyFilter]("Filter for currencies")
-    val supportDateTimeFormats                        = settingKey[Boolean]("Include data to format dates and times")
-    val supportNumberFormats                          = settingKey[Boolean]("Include number formats")
-    val supportISOCodes                               = settingKey[Boolean]("Include iso codes metadata")
-    val cldrBaseUrl                                   = settingKey[String]("A base URL of cldr database")
-    val cldrVersion                                   = settingKey[CLDRVersion]("Version of the cldr database")
-    val localesCodeGen                                =
+    val nsFilter                  = settingKey[NumberingSystemFilter]("Filter for numbering systems")
+    val calendarFilter            = settingKey[CalendarFilter]("Filter for calendars")
+    val localesFilter             = settingKey[LocalesFilter]("Filter for locales")
+    val currencyFilter            = settingKey[CurrencyFilter]("Filter for currencies")
+    val supportDateTimeFormats    = settingKey[Boolean]("Include data to format dates and times")
+    val supportNumberFormats      = settingKey[Boolean]("Include number formats")
+    val supportISOCodes           = settingKey[Boolean]("Include iso codes metadata")
+    val cldrBaseUrl               = settingKey[String]("A base URL of cldr database")
+    val cldrVersion               = settingKey[CLDRVersion]("Version of the cldr database")
+    // The task does its own file-level caching via FileFunction.cached, so sbt 2's
+    // task cache would be redundant. @transient opts out of it; sbt 1 ignores it.
+    @transient val localesCodeGen =
       taskKey[Seq[JFile]]("Generate scala.js compatible database of tzdb data")
-    lazy val baseLocalesSettings: Seq[Def.Setting[_]] =
+    lazy val baseLocalesSettings  =
       Seq(
         Compile / sourceGenerators += Def.task {
           localesCodeGen.value
@@ -105,5 +107,5 @@ object LocalesPlugin extends AutoPlugin {
              resourcesManaged / "locales",
              filters
            )
-    } yield Seq(f1, f2, f3, f4, f5, f6, f7) ++ f).unsafeRunSync.toSet
+    } yield Seq(f1, f2, f3, f4, f5, f6, f7) ++ f).unsafeRunSync().toSet
 }

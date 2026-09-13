@@ -253,7 +253,7 @@ object CodeGenerator {
   }
 
   // Take an Option("foo") and generate the SOME(LIT("FOO"))
-  private def LITOPTION(o: Option[_]): Tree = o.fold(NONE)(v => SOME(LIT(v)))
+  private def LITOPTION[A](o: Option[A]): Tree = o.fold(NONE)(v => SOME(LIT(v)))
 
   def currencyData(c: CurrencyData, filters: Filters): Tree =
     BLOCK(
@@ -262,7 +262,7 @@ object CodeGenerator {
         VAL("currencyTypes", "List[CurrencyType]") := LIST(
           c.currencyTypes
             .filter(c => filters.currencyFilter.filter(c.currencyCode))
-            .map { code: CurrencyType =>
+            .map { (code: CurrencyType) =>
               REF("CurrencyType").APPLY(LIT(code.currencyCode), LIT(code.currencyName))
             }
         ),
@@ -271,7 +271,7 @@ object CodeGenerator {
             .filter { c =>
               c.currencyCode == "DEFAULT" | filters.currencyFilter.filter(c.currencyCode)
             }
-            .map { info: CurrencyDataFractionsInfo =>
+            .map { (info: CurrencyDataFractionsInfo) =>
               REF("CurrencyDataFractionsInfo").APPLY(
                 LIT(info.currencyCode),
                 LIT(info.digits),
@@ -284,13 +284,13 @@ object CodeGenerator {
         VAL("regions", "List[CurrencyDataRegion]") := LIST(
           c.regions
             .filter(c => c.currencies.map(_.currencyCode).exists(filters.currencyFilter.filter))
-            .map { region: CurrencyDataRegion =>
+            .map { (region: CurrencyDataRegion) =>
               REF("CurrencyDataRegion").APPLY(
                 LIT(region.countryCode),
                 LIST(
                   region.currencies
                     .filter(c => filters.currencyFilter.filter(c.currencyCode))
-                    .map { currency: CurrencyDataRegionCurrency =>
+                    .map { (currency: CurrencyDataRegionCurrency) =>
                       REF("CurrencyDataRegionCurrency").APPLY(
                         LIT(currency.currencyCode),
                         LITOPTION(currency.from),
@@ -305,7 +305,7 @@ object CodeGenerator {
         VAL("numericCodes", "List[CurrencyNumericCode]") := LIST(
           c.numericCodes
             .filter(c => filters.currencyFilter.filter(c.currencyCode))
-            .map { code: CurrencyNumericCode =>
+            .map { (code: CurrencyNumericCode) =>
               REF("CurrencyNumericCode").APPLY(LIT(code.currencyCode), LIT(code.numericCode))
             }
         )

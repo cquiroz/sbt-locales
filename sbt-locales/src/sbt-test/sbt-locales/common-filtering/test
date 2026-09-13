@@ -1,3 +1,2 @@
 > managedSources
-$ exec cat jvm/target/scala-3.3.8/src_managed/main/locales/cldr/data/data.scala
 > compile
