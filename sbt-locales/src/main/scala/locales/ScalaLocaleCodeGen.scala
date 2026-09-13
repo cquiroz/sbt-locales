@@ -337,7 +337,7 @@ object ScalaLocaleCodeGen {
           )
           sns -> sym
 
-        case s: Elem if s.label == "symbols" =>
+        case s: Elem if s.label == "symbols"                          =>
           // We take advantage that all aliases on CLDR are to latn
           sns -> NumberSymbols.alias(sns, latn)
       }
@@ -536,11 +536,14 @@ object ScalaLocaleCodeGen {
   }
 
   def parseTerritoryCodes(xml: Node): Map[String, String] =
-    (xml \ "codeMappings" \ "territoryCodes").map { territoryCodes =>
-      val alpha2 = (territoryCodes \ "@type").text
-      val alpha3 = Option((territoryCodes \ "@alpha3").text).filter(_.nonEmpty)
-      alpha3.map(alpha2 -> _)
-    }.flatten.toMap
+    (xml \ "codeMappings" \ "territoryCodes")
+      .map { territoryCodes =>
+        val alpha2 = (territoryCodes \ "@type").text
+        val alpha3 = Option((territoryCodes \ "@alpha3").text).filter(_.nonEmpty)
+        alpha3.map(alpha2 -> _)
+      }
+      .flatten
+      .toMap
 
   def readIso3LanguageCodes(in: InputStream): Map[String, String] =
     scala.io.Source
