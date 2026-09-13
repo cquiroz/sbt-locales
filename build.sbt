@@ -43,10 +43,10 @@ lazy val api = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "cldr-api",
     scalaVersion := scalaVersion212,
     description := "scala-java-locales cldrl api",
-    crossScalaVersions := Seq(scalaVersion212, "2.13.18", "3.3.3"),
+    crossScalaVersions := Seq(scalaVersion212, "2.13.18", "3.3.8"),
     libraryDependencies ++= List(
       ("org.portable-scala" %%% "portable-scala-reflect" % "1.1.3").cross(CrossVersion.for3Use2_13),
-      "org.scalameta"       %%% "munit"                  % "1.2.4" % Test
+      "org.scalameta"       %%% "munit"                  % "1.3.6" % Test
     ),
     testFrameworks += new TestFramework("munit.Framework")
   )
@@ -69,11 +69,11 @@ lazy val sbt_locales = project
     Compile / resources ++= (api.jvm / Compile / sources).value,
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
-      "com.eed3si9n"           %% "gigahorse-okhttp" % "0.9.3",
-      "org.scala-lang.modules" %% "scala-xml"        % "2.4.0",
+      "com.eed3si9n"           %% "gigahorse-okhttp" % "0.9.4",
+      "org.scala-lang.modules" %% "scala-xml"        % "2.5.0",
       "org.typelevel"          %% "cats-core"        % "2.13.0",
-      "org.typelevel"          %% "cats-effect"      % "3.6.4",
-      "com.eed3si9n"           %% "treehugger"       % "0.4.4"
+      "org.typelevel"          %% "cats-effect"      % "3.7.1",
+      "com.eed3si9n"           %% "treehugger"       % "0.5.0"
     )
   )
   .dependsOn(api.jvm)
