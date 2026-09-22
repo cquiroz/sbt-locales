@@ -94,7 +94,7 @@ lazy val sbt_locales = project
     Compile / resources ++= (api.jvm / Compile / sources).value,
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
-      "com.eed3si9n"           %% "gigahorse-okhttp" % "0.9.4",
+      "com.eed3si9n"           %% "gigahorse-okhttp" % "0.9.7",
       "org.scala-lang.modules" %% "scala-xml"        % "2.5.0",
       "org.typelevel"          %% "cats-core"        % "2.13.0",
       "org.typelevel"          %% "cats-effect"      % "3.7.1",
